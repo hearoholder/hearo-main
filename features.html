@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features — Hearo Movies</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">
+            <img src="logo.png" alt="Hearo" class="logo-img">
+        </a>
+
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="features.html" class="active">Features</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="download.html">Download</a>
+        </div>
+
+        <div class="nav-actions">
+            <a href="download.html" class="btn btn-solid">Start Party</a>
+        </div>
+    </nav>
+
+    <main class="page">
+        <div class="page-header centered">
+            <span class="eyebrow">Why Hearo</span>
+            <h1 class="text-3d">Built for movie nights</h1>
+            <p>Every tool you need to watch, react, and hang out with your people — no matter how far apart you are.</p>
+        </div>
+
+        <div class="feature-sections">
+            <!-- Section 1 -->
+            <div class="feature-row">
+                <div class="feature-img">
+                    <img src="resim1.png" alt="Watch Together" style="width: 100%; border-radius: 20px;">
+                </div>
+                <div class="feature-text">
+                    <h2>WATCH MOVIE TOGETHER</h2>
+                    <p>Frame-perfect sync for the ultimate movie night experience. Play, pause, seek — everyone in the room sees it happen at the exact same moment, down to the millisecond.</p>
+                </div>
+            </div>
+
+            <!-- Section 2 -->
+            <div class="feature-row reverse">
+                <div class="feature-img">
+                    <img src="resim2.png" alt="Any Source" style="width: 100%; border-radius: 20px;">
+                </div>
+                <div class="feature-text">
+                    <h2>WATCH <span id="streaming-service" class="glitch-text text-3d">NETFLIX</span> WITH FRIENDS</h2>
+                    <p>Sync your favorite platforms or your own uploads instantly. If you can watch it, you can watch it together.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const services = ["NETFLIX", "DISNEY+", "HULU", "YOUTUBE", "PRIME"];
+        let currentIndex = 0;
+        const textElement = document.getElementById("streaming-service");
+        
+        setInterval(() => {
+            currentIndex = (currentIndex + 1) % services.length;
+            
+            textElement.classList.remove("glitch-anim");
+            void textElement.offsetWidth; // trigger reflow
+            
+            setTimeout(() => {
+                textElement.innerText = services[currentIndex];
+            }, 100);
+            
+            textElement.classList.add("glitch-anim");
+        }, 2000);
+    </script>
+
+    <footer>
+        © 2026 Hearo Movies. Watch together, anywhere.
+    </footer>
+
+</body>
+</html>
