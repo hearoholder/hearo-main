@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Room - HEARO</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M21.9999 15L17.9999 21.9282L9.99989 21.9282L13.9999 15L21.9999 15Z' fill='%2300f0ff'/><path d='M14.0001 9.00003L18.0001 2.07183L10.0001 2.07186L6.00015 9.00007L14.0001 9.00003Z' fill='%2300f0ff'/></svg>">
+    <meta name="description" content="Join a HEARO watch party room and watch together with friends in perfect sync.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&family=Montserrat:wght@900&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="custom-theme.css">
+
+    <style>
+        /* ── Room Page Layout ── */
+        body { overflow: hidden; height: 100vh; }
+
+        .room-app {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: #070514;
+        }
+
+        /* ── Top Bar ── */
+        .room-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.8rem 1.5rem;
+            background: rgba(3, 2, 10, 0.95);
+            border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+            backdrop-filter: blur(20px);
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .room-topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .room-logo {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .room-divider {
+            width: 1px;
+            height: 22px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .room-name-display {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .room-topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .topbar-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.45rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.04);
+            color: rgba(255,255,255,0.8);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+        }
+
+        .topbar-btn:hover {
+            border-color: rgba(0, 240, 255, 0.5);
+            color: #00f0ff;
+            background: rgba(0, 240, 255, 0.08);
+        }
+
+        .topbar-btn.danger:hover {
+            border-color: rgba(255, 60, 60, 0.5);
+            color: #ff4d4d;
+            background: rgba(255, 60, 60, 0.08);
+        }
+
+        .user-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.35rem 0.8rem;
+            border-radius: 50px;
+            background: rgba(0, 240, 255, 0.08);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+        }
+
+        .user-avatar-small {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid #00f0ff;
+            object-fit: cover;
+        }
+
+        .user-name-small {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: white;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* ── Main Area ── */
+        .room-main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* ── Video Area ── */
+        .room-video-area {
+            flex: 1;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* URL Input Bar */
+        .url-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 0.7rem 1rem;
+            background: rgba(3, 2, 10, 0.9);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .url-bar input {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            padding: 0.5rem 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .url-bar input:focus {
+            border-color: #00f0ff;
+            box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.1);
+        }
+
+        .url-bar input::placeholder { color: rgba(255,255,255,0.3); }
+
+        .url-bar-btn {
+            padding: 0.5rem 1.1rem;
+            background: #00f0ff;
+            color: #050505;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+
+        .url-bar-btn:hover {
+            background: #5cffff;
+            transform: translateY(-1px);
+        }
+
+        /* Video Placeholder */
+        .video-placeholder {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.2);
+            gap: 1.5rem;
+            position: relative;
+        }
+
+        .video-placeholder-icon {
+            font-size: 5rem;
+            opacity: 0.3;
+            color: #00f0ff;
+        }
+
+        .video-placeholder h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .video-placeholder p {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.3);
+            max-width: 320px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        /* Sync badge */
+        .sync-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.4rem 1rem;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #00f0ff;
+        }
+
+        .sync-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #00f0ff;
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        /* Player Controls */
+        .player-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+            padding: 3rem 1.5rem 1rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .room-video-area:hover .player-controls {
+            opacity: 1;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: #00f0ff;
+            border-radius: 4px;
+            transition: width 0.1s;
+        }
+
+        .progress-thumb {
+            position: absolute;
+            top: 50%;
+            left: 0%;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #00f0ff;
+            transform: translate(-50%, -50%);
+            transition: left 0.1s;
+        }
+
+        .controls-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .controls-left, .controls-right {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            font-size: 1.1rem;
+        }
+
+        .ctrl-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: inherit;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: all 0.2s;
+            padding: 0.2rem;
+        }
+
+        .ctrl-btn:hover {
+            opacity: 1;
+            color: #00f0ff;
+            transform: scale(1.1);
+        }
+
+        .time-display {
+            font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* ── Sidebar ── */
+        .room-sidebar {
+            width: 340px;
+            background: rgba(3, 2, 10, 0.98);
+            border-left: 1px solid rgba(0, 240, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        /* Sidebar Tabs */
+        .sidebar-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .sidebar-tab {
+            flex: 1;
+            padding: 0.9rem;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.4);
+            cursor: pointer;
+            border: none;
+            background: none;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+            border-bottom: 2px solid transparent;
+        }
+
+        .sidebar-tab:hover { color: rgba(255,255,255,0.7); }
+
+        .sidebar-tab.active {
+            color: #00f0ff;
+            border-bottom-color: #00f0ff;
+        }
+
+        .tab-pane { display: none; flex-direction: column; flex: 1; overflow: hidden; }
+        .tab-pane.active { display: flex; }
+
+        /* ── Chat ── */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0, 240, 255, 0.3) transparent;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 0.7rem;
+            align-items: flex-start;
+        }
+
+        .chat-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+        }
+
+        .chat-bubble {
+            flex: 1;
+        }
+
+        .chat-username {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #00f0ff;
+            margin-bottom: 0.2rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .chat-text {
+            font-size: 0.88rem;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.4;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .chat-time {
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.25);
+            margin-top: 0.2rem;
+        }
+
+        .chat-system {
+            text-align: center;
+            font-size: 0.78rem;
+            color: rgba(0, 240, 255, 0.5);
+            padding: 0.3rem 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Chat Input */
+        .chat-input-area {
+            padding: 0.8rem;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .chat-input-row {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 0.88rem;
+            padding: 0.6rem 0.9rem;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input:focus {
+            border-color: rgba(0, 240, 255, 0.4);
+            background: rgba(0, 240, 255, 0.04);
+        }
+
+        .chat-input::placeholder { color: rgba(255,255,255,0.25); }
+
+        .chat-send-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: #00f0ff;
+            border: none;
+            color: #050505;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .chat-send-btn:hover {
+            background: #5cffff;
+            transform: scale(1.05);
+        }
+
+        /* Emoji row */
+        .emoji-row {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .emoji-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 6px;
+            padding: 0.25rem 0.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .emoji-btn:hover {
+            background: rgba(0, 240, 255, 0.1);
+            border-color: rgba(0, 240, 255, 0.3);
+            transform: scale(1.2);
+        }
+
+        /* ── Viewers Pane ── */
+        .viewers-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .viewer-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.6rem 0.8rem;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            transition: 0.2s;
+        }
+
+        .viewer-item:hover {
+            background: rgba(0, 240, 255, 0.05);
+            border-color: rgba(0, 240, 255, 0.1);
+        }
+
+        .viewer-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 240, 255, 0.2);
+        }
+
+        .viewer-info { flex: 1; }
+
+        .viewer-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: white;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .viewer-status {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.35);
+        }
+
+        .viewer-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-host {
+            background: rgba(0, 240, 255, 0.15);
+            color: #00f0ff;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+        }
+
+        .badge-viewer {
+            background: rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .viewers-count {
+            padding: 0.7rem 0.8rem;
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.35);
+            font-family: 'Inter', sans-serif;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ── Join Room Gate ── */
+        .room-gate {
+            position: fixed;
+            inset: 0;
+            background: rgba(7, 5, 20, 0.97);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .room-gate-card {
+            background: linear-gradient(145deg, rgba(15, 12, 35, 0.98), rgba(3, 2, 10, 0.99));
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            border-radius: 24px;
+            padding: 3rem 2.5rem;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 240, 255, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .room-gate-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, #00f0ff, transparent);
+        }
+
+        .room-gate-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 2rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .gate-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: white;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .gate-subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Connection Error Modal */
+        .conn-error-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .conn-error-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .conn-error-card {
+            background: linear-gradient(145deg, #0d0a1f, #07050f);
+            border: 1px solid rgba(255, 80, 80, 0.3);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 30px rgba(255,60,60,0.08);
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to   { transform: translateY(0);    opacity: 1; }
+        }
+
+        .conn-error-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, #ff4d4d, transparent);
+        }
+
+        .conn-error-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(255, 60, 60, 0.1);
+            border: 2px solid rgba(255, 60, 60, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.6rem;
+            color: #ff4d4d;
+        }
+
+        .conn-error-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 0.8rem;
+        }
+
+        .conn-error-desc {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.92rem;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .conn-error-download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.9rem 2.5rem;
+            background: linear-gradient(90deg, #00f0ff 0%, #00c8d4 100%);
+            border: none;
+            border-radius: 50px;
+            color: #050505;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            box-shadow: 0 5px 20px rgba(0, 240, 255, 0.35);
+            transition: all 0.2s;
+            text-decoration: none;
+            margin-bottom: 1rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .conn-error-download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 240, 255, 0.55);
+        }
+
+        .conn-error-dismiss {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.25);
+            cursor: pointer;
+            transition: color 0.2s;
+            background: none;
+            border: none;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .conn-error-dismiss:hover { color: rgba(255,255,255,0.55); }
+
+        .gate-field {
+            margin-bottom: 1rem;
+        }
+
+        .gate-field label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 0.5rem;
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .gate-field input {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: white;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .gate-field input:focus {
+            border-color: rgba(0, 240, 255, 0.5);
+            background: rgba(0, 240, 255, 0.04);
+            box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.08);
+        }
+
+        .gate-field input::placeholder { color: rgba(255,255,255,0.2); }
+
+        .gate-avatar-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+            justify-content: center;
+        }
+
+        .gate-avatar-opt {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+            opacity: 0.5;
+        }
+
+        .gate-avatar-opt:hover { opacity: 0.8; transform: scale(1.1); }
+
+        .gate-avatar-opt.selected {
+            border-color: #00f0ff;
+            opacity: 1;
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+            transform: scale(1.1);
+        }
+
+        .gate-join-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(90deg, #00f0ff 0%, #00c8d4 100%);
+            border: none;
+            border-radius: 50px;
+            color: #050505;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Outfit', sans-serif;
+            box-shadow: 0 5px 20px rgba(0, 240, 255, 0.3);
+            letter-spacing: 0.5px;
+        }
+
+        .gate-join-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 240, 255, 0.5);
+        }
+
+        .gate-back-link {
+            display: block;
+            text-align: center;
+            margin-top: 1.2rem;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.35);
+            font-family: 'Inter', sans-serif;
+            transition: color 0.2s;
+            text-decoration: none;
+        }
+
+        .gate-back-link:hover { color: rgba(255,255,255,0.7); }
+
+        /* Invite Modal */
+        .invite-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .invite-modal.active { display: flex; }
+
+        .invite-card {
+            background: #0a0910;
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            border-radius: 20px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+        }
+
+        .invite-card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            color: white;
+        }
+
+        .invite-card p {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 1.2rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .invite-link-box {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .invite-link-input {
+            flex: 1;
+            padding: 0.7rem 0.9rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+        }
+
+        .invite-copy-btn {
+            padding: 0.7rem 1rem;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 8px;
+            color: #00f0ff;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .invite-copy-btn:hover { background: rgba(0, 240, 255, 0.2); }
+
+        .invite-close-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: rgba(255,255,255,0.6);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .invite-close-btn:hover {
+            background: rgba(255,255,255,0.09);
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .room-sidebar { display: none; }
+            .url-bar input { font-size: 0.8rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ════════════════════════════════════════ JOIN GATE ════════════════════════════════════════ -->
+    <div class="room-gate" id="room-gate">
+        <div class="room-gate-card">
+            <div class="room-gate-logo">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path d="M21.9999 15L17.9999 21.9282L9.99989 21.9282L13.9999 15L21.9999 15Z" fill="#00f0ff"/>
+                    <path d="M14.0001 9.00003L18.0001 2.07183L10.0001 2.07186L6.00015 9.00007L14.0001 9.00003Z" fill="#00f0ff"/>
+                </svg>
+                HEARO
+            </div>
+
+            <h2 class="gate-title">Enter Room</h2>
+            <p class="gate-subtitle">Join the watch party as a guest</p>
+
+
+
+            <div class="gate-field">
+                <label>Your Nickname</label>
+                <input type="text" id="gate-nickname" placeholder="Enter your nickname..." maxlength="24">
+            </div>
+
+            <div class="gate-field">
+                <label>Pick an Avatar</label>
+                <div class="gate-avatar-row">
+                    <img src="https://api.dicebear.com/9.x/notionists/svg?seed=Felix" class="gate-avatar-opt selected" data-seed="Felix">
+                    <img src="https://api.dicebear.com/9.x/notionists/svg?seed=Aneka" class="gate-avatar-opt" data-seed="Aneka">
+                    <img src="https://api.dicebear.com/9.x/notionists/svg?seed=Zoe" class="gate-avatar-opt" data-seed="Zoe">
+                    <img src="https://api.dicebear.com/9.x/notionists/svg?seed=Max" class="gate-avatar-opt" data-seed="Max">
+                    <img src="https://api.dicebear.com/9.x/notionists/svg?seed=Luna" class="gate-avatar-opt" data-seed="Luna">
+                    <img src="https://api.dicebear.com/9.x/notionists/svg?seed=Kai" class="gate-avatar-opt" data-seed="Kai">
+                </div>
+            </div>
+
+            <button class="gate-join-btn" id="gate-join-btn">
+                <i class="fa-solid fa-door-open" style="margin-right:8px;"></i> Join Room
+            </button>
+
+            <a href="index.html" class="gate-back-link">&larr; Back to Home</a>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ ROOM APP ════════════════════════════════════════ -->
+    <div class="room-app" id="room-app" style="display:none;">
+
+        <!-- Top Bar -->
+        <header class="room-topbar">
+            <div class="room-topbar-left">
+                <a href="index.html" class="room-logo">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M21.9999 15L17.9999 21.9282L9.99989 21.9282L13.9999 15L21.9999 15Z" fill="#00f0ff"/>
+                        <path d="M14.0001 9.00003L18.0001 2.07183L10.0001 2.07186L6.00015 9.00007L14.0001 9.00003Z" fill="#00f0ff"/>
+                    </svg>
+                    HEARO
+                </a>
+                <div class="room-divider"></div>
+                <span class="room-name-display" id="topbar-room-name">Public Watch Party</span>
+                <div class="sync-badge">
+                    <div class="sync-dot"></div>
+                    SYNCED
+                </div>
+            </div>
+            <div class="room-topbar-right">
+                <button class="topbar-btn" id="invite-btn">
+                    <i class="fa-solid fa-user-plus"></i> Invite
+                </button>
+                <button class="topbar-btn" id="fullscreen-btn">
+                    <i class="fa-solid fa-expand"></i>
+                </button>
+                <div class="user-chip" id="user-chip">
+                    <img src="https://api.dicebear.com/9.x/notionists/svg?seed=Felix" class="user-avatar-small" id="topbar-avatar">
+                    <span class="user-name-small" id="topbar-username">Guest</span>
+                </div>
+                <a href="index.html" class="topbar-btn danger">
+                    <i class="fa-solid fa-right-from-bracket"></i> Leave
+                </a>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="room-main">
+
+            <!-- Video Area -->
+            <div class="room-video-area" id="video-area">
+
+                <!-- URL Bar -->
+                <div class="url-bar">
+                    <i class="fa-solid fa-link" style="color: rgba(255,255,255,0.3); font-size:0.85rem;"></i>
+                    <input type="url" id="url-input" placeholder="Paste a video link to load (YouTube, etc.)...">
+                    <button class="url-bar-btn" id="load-url-btn">
+                        <i class="fa-solid fa-play" style="margin-right:6px;"></i> Load
+                    </button>
+                </div>
+
+                <!-- Video Placeholder -->
+                <div class="video-placeholder" id="video-placeholder">
+                    <i class="fa-regular fa-circle-play video-placeholder-icon"></i>
+                    <h3>Waiting for content...</h3>
+                    <p>Paste a video URL above or wait for the host to load something.</p>
+                    <div class="sync-badge" style="font-size:0.75rem;">
+                        <div class="sync-dot"></div>
+                        Watching together • <span id="ph-viewer-count">1,540</span> people
+                    </div>
+                </div>
+
+                <!-- Iframe (hidden initially) -->
+                <iframe id="video-frame" style="display:none; width:100%; flex:1; border:none;" allowfullscreen
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+
+                <!-- Player Controls -->
+                <div class="player-controls" id="player-controls">
+                    <div class="progress-bar" id="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                        <div class="progress-thumb" id="progress-thumb"></div>
+                    </div>
+                    <div class="controls-row">
+                        <div class="controls-left">
+                            <button class="ctrl-btn" id="play-btn"><i class="fa-solid fa-play"></i></button>
+                            <button class="ctrl-btn"><i class="fa-solid fa-backward-step"></i></button>
+                            <button class="ctrl-btn"><i class="fa-solid fa-forward-step"></i></button>
+                            <button class="ctrl-btn"><i class="fa-solid fa-volume-high"></i></button>
+                            <span class="time-display" id="time-display">00:00 / 00:00</span>
+                        </div>
+                        <div class="controls-right">
+                            <button class="ctrl-btn"><i class="fa-solid fa-closed-captioning"></i></button>
+                            <button class="ctrl-btn"><i class="fa-solid fa-gear"></i></button>
+                            <button class="ctrl-btn" id="fs-ctrl-btn"><i class="fa-solid fa-expand"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="room-sidebar">
+                <!-- Tabs -->
+                <div class="sidebar-tabs">
+                    <button class="sidebar-tab active" data-tab="chat">
+                        <i class="fa-solid fa-comment" style="margin-right:5px;"></i> Chat
+                    </button>
+                    <button class="sidebar-tab" data-tab="viewers">
+                        <i class="fa-solid fa-users" style="margin-right:5px;"></i> Viewers
+                    </button>
+                </div>
+
+                <!-- Chat Pane -->
+                <div class="tab-pane active" id="tab-chat">
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="chat-system">🎉 Welcome to the room!</div>
+                        <div class="chat-message">
+                            <img src="https://api.dicebear.com/9.x/notionists/svg?seed=cherry301" class="chat-avatar" alt="">
+                            <div class="chat-bubble">
+                                <div class="chat-username">cherry301 <span style="color:rgba(0,240,255,0.4); font-size:0.7rem;">HOST</span></div>
+                                <div class="chat-text">Alright everyone, let's start! 🎬</div>
+                                <div class="chat-time">just now</div>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="chat-system">🔵 You joined the room</div>
+                    </div>
+                    <div class="chat-input-area">
+                        <div class="emoji-row">
+                            <button class="emoji-btn" data-emoji="😂">😂</button>
+                            <button class="emoji-btn" data-emoji="😍">😍</button>
+                            <button class="emoji-btn" data-emoji="🔥">🔥</button>
+                            <button class="emoji-btn" data-emoji="😱">😱</button>
+                            <button class="emoji-btn" data-emoji="👏">👏</button>
+                            <button class="emoji-btn" data-emoji="🍿">🍿</button>
+                        </div>
+                        <div class="chat-input-row">
+                            <input type="text" class="chat-input" id="chat-input" placeholder="Send a message...">
+                            <button class="chat-send-btn" id="chat-send-btn">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Viewers Pane -->
+                <div class="tab-pane" id="tab-viewers">
+                    <div class="viewers-count">
+                        <div class="sync-dot"></div>
+                        <span id="viewers-total">2 viewers online</span>
+                    </div>
+                    <div class="viewers-list" id="viewers-list">
+                        <div class="viewer-item">
+                            <img src="https://api.dicebear.com/9.x/notionists/svg?seed=cherry301" class="viewer-avatar" alt="">
+                            <div class="viewer-info">
+                                <div class="viewer-name">cherry301</div>
+                                <div class="viewer-status">Watching • Host</div>
+                            </div>
+                            <span class="viewer-badge badge-host">HOST</span>
+                        </div>
+                        <div class="viewer-item" id="your-viewer-item">
+                            <img src="https://api.dicebear.com/9.x/notionists/svg?seed=Felix" class="viewer-avatar" id="your-viewer-avatar" alt="">
+                            <div class="viewer-info">
+                                <div class="viewer-name" id="your-viewer-name">You</div>
+                                <div class="viewer-status">Watching</div>
+                            </div>
+                            <span class="viewer-badge badge-viewer">YOU</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Connection Error Modal -->
+    <div class="conn-error-overlay" id="conn-error-overlay">
+        <div class="conn-error-card">
+            <div class="conn-error-icon">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div class="conn-error-title">Connection Error</div>
+            <div class="conn-error-desc">
+                The web player is currently at capacity or your browser does not support the required codecs for this room.<br><br>
+                Please download the desktop app for a stable experience.
+            </div>
+            <!-- İNDİRME LİNKİNİ BURAYA YAZ: href="..." -->
+            <a href="https://github.com/hearoholder/hearo-main/releases/download/v2.3.1/hearo-desktop-setup-v2.3.1.zip" download class="conn-error-download-btn" id="download-app-btn">
+                <i class="fa-brands fa-windows"></i> Download App
+            </a>
+            <button class="conn-error-dismiss" id="conn-error-dismiss">Dismiss</button>
+        </div>
+    </div>
+
+    <!-- Invite Modal -->
+    <div class="invite-modal" id="invite-modal">
+        <div class="invite-card">
+            <h3><i class="fa-solid fa-user-plus" style="color:#00f0ff; margin-right:8px;"></i>Invite Friends</h3>
+            <p>Share this link to invite friends to the watch party</p>
+            <div class="invite-link-box">
+                <input type="text" class="invite-link-input" id="invite-link-input" readonly>
+                <button class="invite-copy-btn" id="invite-copy-btn">
+                    <i class="fa-solid fa-copy" style="margin-right:5px;"></i>Copy
+                </button>
+            </div>
+            <button class="invite-close-btn" id="invite-close-btn">Close</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // ── Avatar Selection ──
+            const avatarOpts = document.querySelectorAll('.gate-avatar-opt');
+            let selectedSeed = 'Felix';
+            avatarOpts.forEach(av => {
+                av.addEventListener('click', () => {
+                    avatarOpts.forEach(a => a.classList.remove('selected'));
+                    av.classList.add('selected');
+                    selectedSeed = av.dataset.seed;
+                });
+            });
+
+            // ── Join Gate ──
+            const gateJoinBtn = document.getElementById('gate-join-btn');
+            const nicknameInput = document.getElementById('gate-nickname');
+            const roomGate = document.getElementById('room-gate');
+            const roomApp = document.getElementById('room-app');
+
+            gateJoinBtn.addEventListener('click', () => {
+                const nickname = nicknameInput.value.trim() || 'Guest_' + Math.floor(Math.random() * 9999);
+                enterRoom(nickname, selectedSeed);
+            });
+
+            nicknameInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') gateJoinBtn.click();
+            });
+
+            function enterRoom(nickname, seed) {
+                // Update UI with user info
+                document.getElementById('topbar-username').textContent = nickname;
+                document.getElementById('topbar-avatar').src = `https://api.dicebear.com/9.x/notionists/svg?seed=${seed}`;
+                document.getElementById('your-viewer-name').textContent = nickname;
+                document.getElementById('your-viewer-avatar').src = `https://api.dicebear.com/9.x/notionists/svg?seed=${seed}`;
+
+                // Transition
+                roomGate.style.transition = 'opacity 0.4s ease';
+                roomGate.style.opacity = '0';
+                setTimeout(() => {
+                    roomGate.style.display = 'none';
+                    roomApp.style.display = 'flex';
+                    roomApp.style.opacity = '0';
+                    roomApp.style.transition = 'opacity 0.4s ease';
+                    setTimeout(() => { roomApp.style.opacity = '1'; }, 10);
+
+                    // Add join message to chat
+                    addChatMessage('🔵 You joined the room', '', '', true);
+
+                    // Show Connection Error after 5 seconds
+                    setTimeout(() => {
+                        document.getElementById('conn-error-overlay').classList.add('show');
+                    }, 5000);
+                }, 400);
+            }
+
+            // ── Tabs ──
+            const tabs = document.querySelectorAll('.sidebar-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+                    document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
+                });
+            });
+
+            // ── Chat ──
+            const chatMessages = document.getElementById('chat-messages');
+            const chatInput = document.getElementById('chat-input');
+            const chatSendBtn = document.getElementById('chat-send-btn');
+            const emojiBtns = document.querySelectorAll('.emoji-btn');
+            let currentUser = 'Guest';
+            let currentSeed = 'Felix';
+
+            function addChatMessage(username, text, seed, isSystem = false) {
+                if (isSystem) {
+                    const div = document.createElement('div');
+                    div.className = 'chat-system';
+                    div.textContent = text;
+                    chatMessages.appendChild(div);
+                } else {
+                    const now = new Date();
+                    const timeStr = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+                    const msgEl = document.createElement('div');
+                    msgEl.className = 'chat-message';
+                    msgEl.innerHTML = `
+                        <img src="https://api.dicebear.com/9.x/notionists/svg?seed=${seed}" class="chat-avatar" alt="">
+                        <div class="chat-bubble">
+                            <div class="chat-username">${username}</div>
+                            <div class="chat-text">${text}</div>
+                            <div class="chat-time">${timeStr}</div>
+                        </div>
+                    `;
+                    chatMessages.appendChild(msgEl);
+                }
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function sendMessage() {
+                const text = chatInput.value.trim();
+                if (!text) return;
+                const username = document.getElementById('topbar-username').textContent;
+                const seed = document.getElementById('topbar-avatar').src.split('seed=')[1];
+                addChatMessage(username, text, seed);
+                chatInput.value = '';
+                chatInput.focus();
+            }
+
+            chatSendBtn.addEventListener('click', sendMessage);
+            chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
+
+            emojiBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    chatInput.value += btn.dataset.emoji;
+                    chatInput.focus();
+                });
+            });
+
+            // Connection Error Dismiss
+            const dismissBtn = document.getElementById('conn-error-dismiss');
+            if (dismissBtn) {
+                dismissBtn.addEventListener('click', () => {
+                    document.getElementById('conn-error-overlay').classList.remove('show');
+                });
+            }
+
+            // ── URL Load ──
+            const urlInput = document.getElementById('url-input');
+            const loadUrlBtn = document.getElementById('load-url-btn');
+            const videoPlaceholder = document.getElementById('video-placeholder');
+            const videoFrame = document.getElementById('video-frame');
+
+            loadUrlBtn.addEventListener('click', () => {
+                const url = urlInput.value.trim();
+                if (!url) return;
+
+                // Convert YouTube URL to embed
+                let embedUrl = url;
+                const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+                if (ytMatch) {
+                    embedUrl = `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&rel=0`;
+                }
+
+                videoPlaceholder.style.display = 'none';
+                videoFrame.src = embedUrl;
+                videoFrame.style.display = 'block';
+                addChatMessage('System', `🎬 Video loaded!`, 'System', true);
+            });
+
+            urlInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') loadUrlBtn.click(); });
+
+            // ── Fullscreen ──
+            const fullscreenBtn = document.getElementById('fullscreen-btn');
+            const fsCtrBtn = document.getElementById('fs-ctrl-btn');
+            const videoArea = document.getElementById('video-area');
+
+            function toggleFullscreen() {
+                if (!document.fullscreenElement) {
+                    videoArea.requestFullscreen().catch(err => console.log(err));
+                } else {
+                    document.exitFullscreen();
+                }
+            }
+
+            fullscreenBtn.addEventListener('click', toggleFullscreen);
+            fsCtrBtn.addEventListener('click', toggleFullscreen);
+
+            // ── Invite Modal ──
+            const inviteBtn = document.getElementById('invite-btn');
+            const inviteModal = document.getElementById('invite-modal');
+            const inviteCloseBtn = document.getElementById('invite-close-btn');
+            const inviteLinkInput = document.getElementById('invite-link-input');
+            const inviteCopyBtn = document.getElementById('invite-copy-btn');
+
+            inviteLinkInput.value = window.location.href;
+
+            inviteBtn.addEventListener('click', () => {
+                inviteModal.classList.add('active');
+            });
+
+            inviteCloseBtn.addEventListener('click', () => {
+                inviteModal.classList.remove('active');
+            });
+
+            inviteModal.addEventListener('click', (e) => {
+                if (e.target === inviteModal) inviteModal.classList.remove('active');
+            });
+
+            inviteCopyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(inviteLinkInput.value).then(() => {
+                    inviteCopyBtn.innerHTML = '<i class="fa-solid fa-check" style="margin-right:5px;"></i>Copied!';
+                    inviteCopyBtn.style.color = '#5cffff';
+                    setTimeout(() => {
+                        inviteCopyBtn.innerHTML = '<i class="fa-solid fa-copy" style="margin-right:5px;"></i>Copy';
+                        inviteCopyBtn.style.color = '';
+                    }, 2000);
+                });
+            });
+
+            // ── Mouse Glow ──
+            const glow = document.createElement('div');
+            glow.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:99998;transition:background 0.1s ease;';
+            document.body.appendChild(glow);
+            document.addEventListener('mousemove', (e) => {
+                glow.style.background = `radial-gradient(circle 500px at ${e.clientX}px ${e.clientY}px, rgba(0, 240, 255, 0.04), transparent 40%)`;
+            });
+
+        });
+    </script>
+
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v3d52b47920f24c319d37e2661827c42b1787588026925" integrity="sha512-d9sL6GJLXn6fInD1+TVXhTcQOsmxeHfmHAvwGDIxp5TO+uo1fiWW7mHomMj4MLRlCsJDTqXzWLHJFFlPCEIj/A==" data-cf-beacon='{"version":"2024.11.0","token":"40bf189251634366918c257a4b66806c","r":1}' crossorigin="anonymous"></script>
+</body>
+<script>'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'},{'ap':'cpsh-oh'},{'server':'sxb1plzcpnl509616'},{'dcenter':'sxb1'},{'cp_id':'10842411'},{'cp_cl':'8'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script><script src='https://img1.wsimg.com/traffic-assets/js/tccl.min.js'></script></html>

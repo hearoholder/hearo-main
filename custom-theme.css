@@ -1,0 +1,266 @@
+/* HEARO - Custom Theme Override */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap');
+
+:root {
+    --bg-primary: #070514 !important;
+    --bg-secondary: #03020a !important;
+    --accent-red: #00f0ff !important;
+    --accent-red-hover: #5cffff !important;
+    --accent-yellow: #00f0ff !important;
+    --text-primary: #ffffff !important;
+    --text-secondary: #a0979a !important;
+    --font-heading: 'Outfit', sans-serif !important;
+    --font-body: 'Inter', sans-serif !important;
+}
+
+body {
+    background-color: var(--bg-primary) !important;
+}
+
+/* Ambient Deep Cyan Glow */
+body::before {
+    content: '';
+    position: fixed;
+    top: -10vh; left: -20vw;
+    width: 100vw; height: 120vh;
+    background: radial-gradient(circle at 30% 60%, rgba(0, 240, 255, 0.35) 0%, rgba(138, 43, 226, 0.2) 40%, transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+h1, h2, h3, h4, h5, h6, .logo {
+    font-family: var(--font-heading) !important;
+}
+
+/* Logo */
+.logo {
+    font-weight: 800 !important;
+    letter-spacing: 1px !important;
+    background: none !important;
+    color: #fff !important;
+    -webkit-text-fill-color: #fff !important;
+    font-size: 1.8rem !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Navbar overrides */
+.kippo-nav {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+    padding: 1.5rem 0 !important;
+}
+
+.kippo-nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Rounded Pill Menu */
+.nav-pill {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 50px;
+    padding: 0.5rem 1rem !important;
+    display: flex !important;
+    gap: 0 !important;
+}
+
+.nav-links.nav-pill .nav-link {
+    padding: 0.5rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #b0aab0;
+}
+
+.nav-links.nav-pill .nav-link:hover {
+    color: #fff;
+    background: none !important;
+}
+
+/* Action Buttons */
+.btn-outline-pink {
+    border: 1px solid rgba(0,240,255,0.8) !important;
+    color: #00f0ff !important;
+    border-radius: 50px !important;
+    padding: 0.5rem 1.5rem !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    transition: all 0.2s;
+}
+
+.btn-outline-pink:hover {
+    background: rgba(0,240,255,0.1) !important;
+}
+
+.btn-pink {
+    background: #00f0ff !important;
+    color: #050505 !important;
+    border-radius: 50px !important;
+    padding: 0.6rem 2rem !important;
+    font-weight: 700 !important;
+    text-decoration: none !important;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.5) !important;
+    transition: all 0.2s;
+}
+
+.btn-pink:hover {
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.8) !important;
+    transform: translateY(-2px);
+}
+
+/* Hero Section */
+.hero {
+    background: none !important;
+    min-height: 80vh !important;
+    padding-top: 5rem !important;
+}
+
+.hero-nebula-container {
+    display: none !important;
+}
+
+.hero-text h1 {
+    font-size: 6rem !important;
+    font-weight: 900 !important;
+    letter-spacing: -3px !important;
+    font-family: var(--font-heading) !important;
+    color: #fff !important;
+    background: none !important;
+    -webkit-text-fill-color: #fff !important;
+    line-height: 1 !important;
+    margin-bottom: 2rem !important;
+}
+
+.hero-text p {
+    font-size: 1.25rem !important;
+    color: #b3a4a8 !important;
+    max-width: 500px !important;
+    line-height: 1.6 !important;
+}
+
+/* 3D Giant Text */
+.kippo-3d-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8vw;
+    font-weight: 900;
+    line-height: 0.85;
+    color: #fff;
+    text-align: right;
+    letter-spacing: -2px;
+    transform: rotateX(15deg) rotateY(-15deg);
+    text-shadow: 
+        1px 1px 0 #ddd,
+        2px 2px 0 #ccc,
+        3px 3px 0 #bbb,
+        4px 4px 0 #aaa,
+        5px 5px 0 #999,
+        6px 6px 0 #888,
+        7px 7px 0 #777,
+        8px 8px 0 #666,
+        9px 9px 0 #555,
+        15px 15px 25px rgba(0,0,0,0.8);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+}
+
+@keyframes bounceWobble {
+    0% { transform: rotateX(15deg) rotateY(-15deg) scale(1); }
+    25% { transform: rotateX(25deg) rotateY(-5deg) scale(1.05) translateY(-5px); }
+    50% { transform: rotateX(5deg) rotateY(-25deg) scale(1.1) translateY(-10px); }
+    75% { transform: rotateX(20deg) rotateY(-10deg) scale(1.05) translateY(-5px); }
+    100% { transform: rotateX(15deg) rotateY(-15deg) scale(1); }
+}
+
+.kippo-3d-text:hover {
+    animation: bounceWobble 1.5s infinite ease-in-out;
+    text-shadow: 
+        1px 1px 0 #5cffff,
+        2px 2px 0 #00c8d4,
+        3px 3px 0 #bbb,
+        4px 4px 0 #aaa,
+        5px 5px 0 #999,
+        6px 6px 0 #888,
+        7px 7px 0 #777,
+        8px 8px 0 #666,
+        9px 9px 0 #555,
+        15px 30px 40px rgba(0, 240, 255, 0.6);
+}
+
+/* Stat items accent */
+.stat-item h2 {
+    background: linear-gradient(135deg, #00f0ff, #5cffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Section headings accent */
+h2 {
+    position: relative;
+}
+
+/* Badge live pulse */
+.badge-live {
+    background: #00f0ff !important;
+    color: #050505 !important;
+}
+
+/* Btn primary override */
+.btn-primary {
+    background: linear-gradient(135deg, #00f0ff 0%, #00c8d4 100%) !important;
+    color: #050505 !important;
+    box-shadow: 0 4px 15px rgba(0, 240, 255, 0.4) !important;
+}
+
+.btn-primary:hover {
+    box-shadow: 0 8px 25px rgba(0, 240, 255, 0.6) !important;
+}
+
+/* Feature card hover */
+.feature-card:hover {
+    border-color: #00f0ff !important;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+}
+
+.feature-icon {
+    color: #00f0ff !important;
+}
+
+/* Pricing premium card */
+.pricing-card.premium {
+    border-color: #00f0ff !important;
+    box-shadow: 0 10px 40px rgba(0, 240, 255, 0.15) !important;
+}
+
+.popular-badge {
+    background: #00f0ff !important;
+    color: #050505 !important;
+}
+
+/* Features list icon */
+.features-list li i {
+    color: #00f0ff !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #070514;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #00f0ff;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #5cffff;
+}
