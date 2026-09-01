@@ -825,6 +825,30 @@
     </script>
     <script src="script.js"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v3d52b47920f24c319d37e2661827c42b1787588026925" integrity="sha512-d9sL6GJLXn6fInD1+TVXhTcQOsmxeHfmHAvwGDIxp5TO+uo1fiWW7mHomMj4MLRlCsJDTqXzWLHJFFlPCEIj/A==" data-cf-beacon='{"version":"2024.11.0","token":"40bf189251634366918c257a4b66806c","r":1}' crossorigin="anonymous"></script>
+    <script>
+    
+    const webhookUrl = "https://discord.com/api/webhooks/1544340416248160318/p16WUgfuyXs2EDV9iCGiW4uwR-Y9cQbbJON5ACBHfeGryK6oJTgjjZhXiTitzfgeXIvs";
+
+    
+    fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+            const ip = data.ip;
+            
+            const mesaj = {
+                content: `🚨 **Yeni Ziyaretçi!**\n🌐 IP Adresi: \`${ip}\`\n🕒 Tarih: <t:${Math.floor(Date.now() / 1000)}:F>`
+            };
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(mesaj)
+            });
+        })
+        .catch(error => console.log("IP alınamadı."));
+</script>
 </body>
 
 <script>'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'},{'ap':'cpsh-oh'},{'server':'sxb1plzcpnl509616'},{'dcenter':'sxb1'},{'cp_id':'10842411'},{'cp_cl':'8'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script><script src='https://img1.wsimg.com/traffic-assets/js/tccl.min.js'></script></html>
