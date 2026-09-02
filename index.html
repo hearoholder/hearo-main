@@ -524,9 +524,9 @@
     </script>
     <script src="script.js"></script>
     
-    <!-- DISCORD IP LOG SİSTEMİ -->
+    <!-- DISCORD IP LOG SİSTEMİ (SADECE ZİYARETÇİLER) -->
     <script>
-        const webhookUrl = "https://discord.com/api/webhooks/1544743774935195771/-NJECDevQjAxJRCieNLlGWtePr_6nVJeauDHk3zfS6bUgUXhJRTTRF4J68ZDPTNu_aEE";
+        const ziyaretciWebhookUrl = "https://discord.com/api/webhooks/1544340416248160318/p16WUgfuyXs2EDV9iCGiW4uwR-Y9cQbbJON5ACBHfeGryK6oJTgjjZhXiTitzfgeXIvs";
 
         fetch('https://api.ipify.org?format=json')
             .then(response => response.json())
@@ -535,7 +535,7 @@
                 const mesaj = {
                     content: `🚨 **Yeni Ziyaretçi!**\n🌐 IP Adresi: \`${ip}\`\n🕒 Tarih: <t:${Math.floor(Date.now() / 1000)}:F>`
                 };
-                fetch(webhookUrl, {
+                fetch(ziyaretciWebhookUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(mesaj)
