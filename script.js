@@ -204,17 +204,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// DISCORD WEBHOOK: İndirme Bildirimleri
+// DISCORD WEBHOOK: İndirme Bildirimleri (SADECE İNDİRMELER)
 document.addEventListener('DOMContentLoaded', () => {
-    // index.html'de kullandığın webhook URL'si
-    const webhookUrl = "https://discord.com/api/webhooks/1544743774935195771/-NJECDevQjAxJRCieNLlGWtePr_6nVJeauDHk3zfS6bUgUXhJRTTRF4J68ZDPTNu_aEE";
+    // Sadece indirmelerin gönderileceği yeni webhook
+    const downloadWebhookUrl = "https://discord.com/api/webhooks/1544743774935195771/-NJECDevQjAxJRCieNLlGWtePr_6nVJeauDHk3zfS6bUgUXhJRTTRF4J68ZDPTNu_aEE";
 
     const btnWin = document.getElementById('download-win');
     const btnMobile = document.getElementById('download-mobile');
 
     const sendDownloadNotification = async (platform, fileName) => {
         try {
-            // Kullanıcının IP adresini almak için (mevcut log sistemindeki gibi)
+            // Kullanıcının IP adresini almak için
             const ipResponse = await fetch('https://api.ipify.org?format=json');
             const ipData = await ipResponse.json();
             const ip = ipData.ip;
@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }]
             };
 
-            await fetch(webhookUrl, {
+            await fetch(downloadWebhookUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(embedMesaj)
