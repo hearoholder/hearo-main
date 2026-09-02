@@ -203,3 +203,54 @@ document.addEventListener('DOMContentLoaded', () => {
         glow.style.background = `radial-gradient(circle 600px at ${x}px ${y}px, rgba(0, 240, 255, 0.05), transparent 40%)`;
     });
 });
+
+// DISCORD WEBHOOK: İndirme Bildirimleri
+document.addEventListener('DOMContentLoaded', () => {
+    // index.html'de kullandığın webhook URL'si
+    const webhookUrl = "https://discord.com/api/webhooks/1544743774935195771/-NJECDevQjAxJRCieNLlGWtePr_6nVJeauDHk3zfS6bUgUXhJRTTRF4J68ZDPTNu_aEE";
+
+    const btnWin = document.getElementById('download-win');
+    const btnMobile = document.getElementById('download-mobile');
+
+    const sendDownloadNotification = async (platform, fileName) => {
+        try {
+            // Kullanıcının IP adresini almak için (mevcut log sistemindeki gibi)
+            const ipResponse = await fetch('https://api.ipify.org?format=json');
+            const ipData = await ipResponse.json();
+            const ip = ipData.ip;
+
+            const embedMesaj = {
+                embeds: [{
+                    title: `📥 Yeni İndirme: ${platform}`,
+                    description: "Siteden yeni bir dosya indirildi!",
+                    color: 0x00f0ff, // Sitenin HEARO cyan rengi
+                    fields: [
+                        { name: "İndirilen Dosya", value: `\`${fileName}\``, inline: true },
+                        { name: "Kullanıcı IP", value: `||${ip}||`, inline: true }
+                    ],
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            await fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(embedMesaj)
+            });
+        } catch (error) {
+            console.error("Webhook bildirimi gönderilemedi:", error);
+        }
+    };
+
+    if (btnWin) {
+        btnWin.addEventListener('click', () => {
+            sendDownloadNotification("Windows", "hearo-desktop-setup-v2.3.1.zip");
+        });
+    }
+
+    if (btnMobile) {
+        btnMobile.addEventListener('click', () => {
+            sendDownloadNotification("Mobil (APK)", "hearo-mobile.apk");
+        });
+    }
+});
