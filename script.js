@@ -204,72 +204,46 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// backend
+// GÜVENLİ BACKEND BAĞLANTISI (İndirme ve F12 Uyarıları İçin)
 document.addEventListener('DOMContentLoaded', () => {
     const backendUrl = "https://billowing-smoke-cb6b.hearo.workers.dev";
-
-    // 1. İNDİRME BİLDİRİMLERİ
     const btnWin = document.getElementById('download-win');
     const btnMobile = document.getElementById('download-mobile');
 
-    const sendSecureNotification = async (type, embedData) => {
+    const sendSecureNotification = async (type, detailData) => {
         try {
             const ipResponse = await fetch('https://api.ipify.org?format=json');
             const ipData = await ipResponse.json();
-            const ip = ipData.ip;
 
-            // Embed içine IP ekleme
-            embedData.embeds[0].fields.push({ name: "Kullanıcı IP", value: `||${ip}||`, inline: true });
-
+            // Tüm JSON tasarımı Cloudflare içinde, biz sadece basit verileri gönderiyoruz.
             await fetch(backendUrl, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tur: type, payload: embedData })
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer hearo_gizli_anahtar_2026'
+                },
+                body: JSON.stringify({ 
+                    tur: type, 
+                    ip: ipData.ip,
+                    detay: detailData
+                })
             });
         } catch (error) {
-            console.error("İşlem loglanamadı:", error);
+            console.error("İşlem loglanamadı.");
         }
     };
 
+    // 1. İNDİRME LOGLARI
     if (btnWin) {
-        btnWin.addEventListener('click', () => {
-            sendSecureNotification("indirme", {
-                embeds: [{
-                    title: `📥 Yeni İndirme: Windows`,
-                    description: "Siteden yeni bir dosya indirildi!",
-                    color: 0x00f0ff,
-                    fields: [{ name: "İndirilen Dosya", value: `\`hearo-desktop-setup-v2.3.1.zip\``, inline: true }],
-                    timestamp: new Date().toISOString()
-                }]
-            });
-        });
+        btnWin.addEventListener('click', () => sendSecureNotification("indirme", { platform: "Windows", dosya: "hearo-desktop-setup-v2.3.1.zip" }));
     }
-
     if (btnMobile) {
-        btnMobile.addEventListener('click', () => {
-            sendSecureNotification("indirme", {
-                embeds: [{
-                    title: `📥 Yeni İndirme: Mobil (APK)`,
-                    description: "Siteden yeni bir dosya indirildi!",
-                    color: 0x00f0ff,
-                    fields: [{ name: "İndirilen Dosya", value: `\`hearo-mobile.apk\``, inline: true }],
-                    timestamp: new Date().toISOString()
-                }]
-            });
-        });
+        btnMobile.addEventListener('click', () => sendSecureNotification("indirme", { platform: "Mobil (APK)", dosya: "hearo-mobile.apk" }));
     }
 
-    // 2. F12 VE SAĞ TIK ENGELLEME
+    // 2. F12 VE SAĞ TIK ENGELLEME (KORUNDU)
     const sendSecurityAlert = (actionType) => {
-        sendSecureNotification("guvenlik", {
-            embeds: [{
-                title: `🚨 Şüpheli İşlem Algılandı!`,
-                description: `Bir kullanıcı geliştirici araçlarını açmaya çalıştı!`,
-                color: 0xff0000,
-                fields: [{ name: "Deneme Türü", value: `\`${actionType}\``, inline: true }],
-                timestamp: new Date().toISOString()
-            }]
-        });
+        sendSecureNotification("guvenlik", { islem: actionType });
     };
 
     document.addEventListener('contextmenu', e => e.preventDefault());
