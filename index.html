@@ -531,18 +531,16 @@
         fetch('https://api.ipify.org?format=json')
             .then(response => response.json())
             .then(data => {
-                const ip = data.ip;
-                const mesaj = {
-                    content: `🚨 **Yeni Ziyaretçi!**\n🌐 IP Adresi: \`${ip}\`\n🕒 Tarih: <t:${Math.floor(Date.now() / 1000)}:F>`
-                };
-                
                 fetch(backendUrl, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ tur: "ziyaretci", payload: mesaj })
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer hearo_gizli_anahtar_2026' 
+                    },
+                    body: JSON.stringify({ tur: "ziyaretci", ip: data.ip })
                 });
             })
-            .catch(error => console.log("IP alınamadı."));
+            .catch(error => console.log("Bağlantı kurulamadı."));
     </script>
 </body>
 </html>
