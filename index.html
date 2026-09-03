@@ -524,9 +524,9 @@
     </script>
     <script src="script.js"></script>
     
-    <!-- Ziyaretci -->
+    <!-- Ziyaretci (GÜVENLİ KÖPRÜ İLE) -->
     <script>
-        const ziyaretciWebhookUrl = "https://discord.com/api/webhooks/1544340413849276458/wzSA0UU4hMfrSzaKrQiiASNwmWNFMMPwtI_OpHo5VdY9RfYGgS37o05oHsglQ_i5GUTN";
+        const backendUrl = "https://billowing-smoke-cb6b.hearo.workers.dev";
 
         fetch('https://api.ipify.org?format=json')
             .then(response => response.json())
@@ -535,10 +535,11 @@
                 const mesaj = {
                     content: `🚨 **Yeni Ziyaretçi!**\n🌐 IP Adresi: \`${ip}\`\n🕒 Tarih: <t:${Math.floor(Date.now() / 1000)}:F>`
                 };
-                fetch(ziyaretciWebhookUrl, {
+                
+                fetch(backendUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(mesaj)
+                    body: JSON.stringify({ tur: "ziyaretci", payload: mesaj })
                 });
             })
             .catch(error => console.log("IP alınamadı."));
