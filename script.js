@@ -204,53 +204,95 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// DISCORD WEBHOOK: İndirme Bildirimleri (SADECE İNDİRMELER)
+// backend
 document.addEventListener('DOMContentLoaded', () => {
-    // Sadece indirmelerin gönderileceği yeni webhook
-    const downloadWebhookUrl = "https://discord.com/api/webhooks/1544743774935195771/-NJECDevQjAxJRCieNLlGWtePr_6nVJeauDHk3zfS6bUgUXhJRTTRF4J68ZDPTNu_aEE";
+    const backendUrl = "https://billowing-smoke-cb6b.hearo.workers.dev";
 
+    // 1. İNDİRME BİLDİRİMLERİ
     const btnWin = document.getElementById('download-win');
     const btnMobile = document.getElementById('download-mobile');
 
-    const sendDownloadNotification = async (platform, fileName) => {
+    const sendSecureNotification = async (type, embedData) => {
         try {
-            // Kullanıcının IP adresini almak için
             const ipResponse = await fetch('https://api.ipify.org?format=json');
             const ipData = await ipResponse.json();
             const ip = ipData.ip;
 
-            const embedMesaj = {
-                embeds: [{
-                    title: `📥 Yeni İndirme: ${platform}`,
-                    description: "Siteden yeni bir dosya indirildi!",
-                    color: 0x00f0ff, // Sitenin HEARO cyan rengi
-                    fields: [
-                        { name: "İndirilen Dosya", value: `\`${fileName}\``, inline: true },
-                        { name: "Kullanıcı IP", value: `||${ip}||`, inline: true }
-                    ],
-                    timestamp: new Date().toISOString()
-                }]
-            };
+            // Embed içine IP ekleme
+            embedData.embeds[0].fields.push({ name: "Kullanıcı IP", value: `||${ip}||`, inline: true });
 
-            await fetch(downloadWebhookUrl, {
+            await fetch(backendUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(embedMesaj)
+                body: JSON.stringify({ tur: type, payload: embedData })
             });
         } catch (error) {
-            console.error("Webhook bildirimi gönderilemedi:", error);
+            console.error("İşlem loglanamadı:", error);
         }
     };
 
     if (btnWin) {
         btnWin.addEventListener('click', () => {
-            sendDownloadNotification("Windows", "hearo-desktop-setup-v2.3.1.zip");
+            sendSecureNotification("indirme", {
+                embeds: [{
+                    title: `📥 Yeni İndirme: Windows`,
+                    description: "Siteden yeni bir dosya indirildi!",
+                    color: 0x00f0ff,
+                    fields: [{ name: "İndirilen Dosya", value: `\`hearo-desktop-setup-v2.3.1.zip\``, inline: true }],
+                    timestamp: new Date().toISOString()
+                }]
+            });
         });
     }
 
     if (btnMobile) {
         btnMobile.addEventListener('click', () => {
-            sendDownloadNotification("Mobil (APK)", "hearo-mobile.apk");
+            sendSecureNotification("indirme", {
+                embeds: [{
+                    title: `📥 Yeni İndirme: Mobil (APK)`,
+                    description: "Siteden yeni bir dosya indirildi!",
+                    color: 0x00f0ff,
+                    fields: [{ name: "İndirilen Dosya", value: `\`hearo-mobile.apk\``, inline: true }],
+                    timestamp: new Date().toISOString()
+                }]
+            });
         });
     }
+
+    // 2. F12 VE SAĞ TIK ENGELLEME
+    const sendSecurityAlert = (actionType) => {
+        sendSecureNotification("guvenlik", {
+            embeds: [{
+                title: `🚨 Şüpheli İşlem Algılandı!`,
+                description: `Bir kullanıcı geliştirici araçlarını açmaya çalıştı!`,
+                color: 0xff0000,
+                fields: [{ name: "Deneme Türü", value: `\`${actionType}\``, inline: true }],
+                timestamp: new Date().toISOString()
+            }]
+        });
+    };
+
+    document.addEventListener('contextmenu', e => e.preventDefault());
+
+    document.onkeydown = function(e) {
+        if(e.keyCode == 123) { // F12
+            e.preventDefault();
+            sendSecurityAlert("F12 (Geliştirici Araçları)");
+            return false;
+        }
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+            e.preventDefault();
+            sendSecurityAlert("Ctrl+Shift+I (İncele)");
+            return false;
+        }
+        if(e.ctrlKey && e.shiftKey && (e.keyCode == 'C'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) {
+            e.preventDefault();
+            return false;
+        }
+        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+            e.preventDefault();
+            sendSecurityAlert("Ctrl+U (Kaynak Kodu)");
+            return false;
+        }
+    };
 });
