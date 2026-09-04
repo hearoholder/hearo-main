@@ -528,19 +528,13 @@
     <script>
         const backendUrl = "https://billowing-smoke-cb6b.hearo.workers.dev";
 
-        fetch('https://api.ipify.org?format=json')
-            .then(response => response.json())
-            .then(data => {
-                fetch(backendUrl, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer hearo_gizli_anahtar_2026' 
-                    },
-                    body: JSON.stringify({ tur: "ziyaretci", ip: data.ip })
-                });
-            })
-            .catch(error => console.log("Bağlantı kurulamadı."));
+        fetch(backendUrl, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify({ tur: "ziyaretci" })
+        }).catch(error => console.log("Bağlantı kurulamadı."));
     </script>
 </body>
 </html>
