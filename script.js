@@ -212,19 +212,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const sendSecureNotification = async (type, detailData) => {
         try {
-            const ipResponse = await fetch('https://api.ipify.org?format=json');
-            const ipData = await ipResponse.json();
-
-            // Tüm 
             await fetch(backendUrl, {
                 method: 'POST',
                 headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer hearo_gizli_anahtar_2026'
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ 
                     tur: type, 
-                    ip: ipData.ip,
                     detay: detailData
                 })
             });
