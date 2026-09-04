@@ -204,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// GÜVENLİ BACKEND BAĞLANTISI (İndirme ve F12 Uyarıları İçin)
+// GÜVENLİ 
 document.addEventListener('DOMContentLoaded', () => {
     const backendUrl = "https://billowing-smoke-cb6b.hearo.workers.dev";
     const btnWin = document.getElementById('download-win');
@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const ipResponse = await fetch('https://api.ipify.org?format=json');
             const ipData = await ipResponse.json();
 
-            // Tüm JSON tasarımı Cloudflare içinde, biz sadece basit verileri gönderiyoruz.
+            // Tüm 
             await fetch(backendUrl, {
                 method: 'POST',
                 headers: { 
@@ -233,15 +233,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // 1. İNDİRME LOGLARI
+    // 1. İNDİRME
     if (btnWin) {
-        btnWin.addEventListener('click', () => sendSecureNotification("indirme", { platform: "Windows", dosya: "hearo-desktop-setup-v2.3.1.zip" }));
-    }
-    if (btnMobile) {
-        btnMobile.addEventListener('click', () => sendSecureNotification("indirme", { platform: "Mobil (APK)", dosya: "hearo-mobile.apk" }));
+        btnWin.addEventListener('click', async (e) => {
+            e.preventDefault(); 
+            const originalHref = btnWin.getAttribute('href'); 
+            
+            sendSecureNotification("indirme", { platform: "Windows", dosya: "hearo-desktop-setup-v2.3.1.zip" });
+            
+            window.location.href = originalHref; 
+        });
     }
 
-    // 2. F12 VE SAĞ TIK ENGELLEME (KORUNDU)
+    if (btnMobile) {
+        btnMobile.addEventListener('click', async (e) => {
+            e.preventDefault(); 
+            const originalHref = btnMobile.getAttribute('href'); 
+            
+            sendSecureNotification("indirme", { platform: "Mobil (APK)", dosya: "hearo-mobile.apk" });
+            
+            window.location.href = originalHref;
+        });
+    }
+
+    // 2. F12 VE SAĞ TIK 
     const sendSecurityAlert = (actionType) => {
         sendSecureNotification("guvenlik", { islem: actionType });
     };
