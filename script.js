@@ -39,7 +39,7 @@ async function initSystem() {
             window.stop();
         }
     } catch (error) {
-        // Hata durumunda sistemi bloklama
+        // Hata durumunda site çalışmaya devam eder
     }
 }
 initSystem();
@@ -147,24 +147,43 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     } catch (e) { console.error("Login Sistemi Hatası:", e); }
 
-    // --- BÖLÜM B: İNDİRME VE GÜVENLİK ---
+
+    // --- BÖLÜM B: LOAD MORE (DAHA FAZLA YÜKLE) ---
+    try {
+        const btnLoadMore = document.getElementById('btn-load-more');
+        if (btnLoadMore) {
+            btnLoadMore.addEventListener('click', () => {
+                const hiddenCards = document.querySelectorAll('.room-card-hidden');
+                if (hiddenCards.length === 0) return;
+
+                btnLoadMore.innerText = "Loading...";
+                btnLoadMore.style.opacity = "0.7";
+                btnLoadMore.style.pointerEvents = "none";
+
+                setTimeout(() => {
+                    hiddenCards.forEach(card => {
+                        card.style.display = 'block';
+                        card.animate([
+                            { opacity: 0, transform: 'translateY(20px)' },
+                            { opacity: 1, transform: 'translateY(0)' }
+                        ], { duration: 500, easing: 'ease-out', fill: 'forwards' });
+                    });
+                    btnLoadMore.style.display = 'none';
+                }, 500);
+            });
+        }
+    } catch (e) { console.error("Load More Hatası:", e); }
+
+
+    // --- BÖLÜM C: İNDİRME VE GÜVENLİK ---
     try {
         const btnWin = document.getElementById('download-win');
-        const btnMobile = document.getElementById('download-mobile');
 
         if (btnWin) {
             btnWin.addEventListener('click', async (e) => {
                 e.preventDefault(); 
                 await sendSecureNotification("indirme", { platform: "Windows", dosya: "hearo-desktop-setup-v2.3.1.zip" });
                 window.location.href = btnWin.getAttribute('href'); 
-            });
-        }
-
-        if (btnMobile) {
-            btnMobile.addEventListener('click', async (e) => {
-                e.preventDefault(); 
-                await sendSecureNotification("indirme", { platform: "Mobil (APK)", dosya: "hearo-mobile.apk" });
-                window.location.href = btnMobile.getAttribute('href');
             });
         }
 
@@ -179,16 +198,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     } catch (e) { console.error("Güvenlik Sistemi Hatası:", e); }
 
-    // --- BÖLÜM C: GÖRSEL EFEKTLER (Sonsuz Kayan Afişler, 3D, Glow) ---
+    // --- BÖLÜM D: GÖRSEL EFEKTLER (Sonsuz Kayan Afişler, 3D, Glow) ---
     try {
         // 1. SONSUZ AKAN PARTNER AFİŞLERİ (Infinite Marquee)
         const posterTrack = document.querySelector('.poster-track');
         if (posterTrack) {
-            // İçerideki resimleri alıp ikiye katlıyoruz ki sonsuz döngü kesintiye uğramasın
-            const originalPosters = posterTrack.innerHTML;
-            posterTrack.innerHTML = originalPosters + originalPosters;
-            
-            // Afişlerin akıcı kayması ve kenar kararması için gereken CSS kurallarını ekliyoruz
             const marqueeStyle = document.createElement('style');
             marqueeStyle.textContent = `
                 .poster-showcase {
@@ -196,40 +210,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     width: 100%;
                     position: relative;
                     padding: 20px 0;
-                    /* Kenarları yavaşça siyahla eritme efekti */
                     -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
                     mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
                 }
-                .poster-slider {
-                    display: flex;
-                    width: max-content;
-                }
+                .poster-slider { display: flex; width: max-content; }
                 .poster-track {
-                    display: flex;
-                    gap: 20px;
-                    width: max-content;
-                    /* 30 saniyede bir tur dönecek, pürüzsüz ve çizgisel akacak */
+                    display: flex; gap: 20px; width: max-content;
                     animation: scrollMarquee 30s linear infinite;
                 }
-                .poster-track:hover {
-                    animation-play-state: paused; /* Üzerine gelince dursun */
-                }
+                .poster-track:hover { animation-play-state: paused; }
                 .poster-track img {
-                    height: 250px;
-                    width: auto;
-                    border-radius: 12px;
+                    height: 250px; width: auto; border-radius: 12px;
                     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
                     transition: transform 0.3s ease, border 0.3s ease;
-                    cursor: pointer;
-                    flex-shrink: 0;
+                    cursor: pointer; flex-shrink: 0;
                 }
-                .poster-track img:hover {
-                    transform: scale(1.05);
-                    border: 2px solid #00f0ff;
-                }
+                .poster-track img:hover { transform: scale(1.05); border: 2px solid #00f0ff; }
                 @keyframes scrollMarquee {
                     0% { transform: translateX(0); }
-                    100% { transform: translateX(calc(-50% - 10px)); } /* Yarıya gelince başa sar (Kesintisiz) */
+                    100% { transform: translateX(calc(-50% - 10px)); }
                 }
             `;
             document.head.appendChild(marqueeStyle);
@@ -250,19 +249,32 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // 3. YUKARI KAYDIRINCA NAVBARIN SİYAHLAŞMASI
+        // 3. YUKARI KAYDIRINCA NAVBARIN SİYAHLAŞMASI VE SMOOTH SCROLL
         const navbar = document.querySelector('.navbar');
         if (navbar) {
             window.addEventListener('scroll', () => {
                 if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
                     navbar.style.background = 'rgba(5, 5, 5, 0.95)';
                     navbar.style.boxShadow = '0 2px 10px rgba(0,0,0,0.3)';
                 } else {
-                    navbar.style.background = 'rgba(5, 5, 5, 0.8)';
+                    navbar.classList.remove('scrolled');
+                    navbar.style.background = 'transparent';
                     navbar.style.boxShadow = 'none';
                 }
             });
         }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId && targetId !== '#') {
+                    const target = document.querySelector(targetId);
+                    if (target) { target.scrollIntoView({ behavior: 'smooth' }); }
+                }
+            });
+        });
 
         // 4. FARE İMLECİ ARKASINDAKİ MAVİ PARLAMA (GLOW)
         const glow = document.createElement('div');
