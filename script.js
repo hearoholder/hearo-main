@@ -1,3 +1,39 @@
+// ==============================================================
+// 1. IP BAN (KARA LİSTE) SİSTEMİ
+// Siteye girişi yasaklanacak IP adreslerini bu listeye ekle.
+// ==============================================================
+const bannedIPs = [
+    "192.168.1.100", // Örnek banlı IP
+    "8.8.8.8",       // Örnek banlı IP
+    // "buraya.banlanacak.ip.yaz",
+];
+
+async function checkIPAccess() {
+    try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        
+        if (bannedIPs.includes(data.ip)) {
+            // Eğer giren kişi banlı listedeyse, tüm siteyi sil ve hata ekranı göster
+            document.body.innerHTML = `
+                <div style="display:flex; flex-direction:column; height:100vh; width:100vw; background:#050505; color:#ff3366; align-items:center; justify-content:center; font-family:sans-serif; text-align:center;">
+                    <i class="fa-solid fa-shield-halved" style="font-size: 60px; margin-bottom: 20px;"></i>
+                    <h1 style="font-size: 32px; font-weight: bold; margin-bottom: 10px; letter-spacing: 2px;">ACCESS DENIED</h1>
+                    <p style="color: #888; font-size: 14px;">Your IP address (${data.ip}) has been blocked from accessing this server.</p>
+                </div>`;
+            document.body.style.overflow = 'hidden'; // Kaydırmayı kapat
+            throw new Error("Erişim Engellendi: Kara Liste IP");
+        }
+    } catch (error) {
+        // IP çekilemezse (adblocker vb.) normal kullanıcıyı engellememek için sessizce geç
+    }
+}
+// Sayfa yüklenir yüklenmez IP kontrolünü başlat
+checkIPAccess();
+
+// ==============================================================
+// 2. ORİJİNAL HEARO UI SCRIPTLERİ VE GİZLİ CHECKER GİRİŞİ
+// ==============================================================
 console.log('HEARO UI Loaded.');
 
 // 3D Tilt Effect for Hero Logo AND Poster Showcase
@@ -6,28 +42,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroLogo = document.getElementById('hero-logo');
     const posterShowcase = document.querySelector('.poster-showcase');
 
-    // Helper function for tilt
     const applyTilt = (container, element, intensity = 20) => {
         container.addEventListener('mousemove', (e) => {
             const rect = container.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-
             const xRotation = ((y / rect.height) - 0.5) * -intensity;
             const yRotation = ((x / rect.width) - 0.5) * intensity;
-
             element.style.transform = `perspective(1000px) rotateX(${xRotation}deg) rotateY(${yRotation}deg) scale(1.02)`;
         });
-
         container.addEventListener('mouseleave', () => {
             element.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
         });
     };
 
-    if (hero && heroLogo) {
-        applyTilt(hero, heroLogo, 25);
-    }
-
+    if (hero && heroLogo) applyTilt(hero, heroLogo, 25);
     if (posterShowcase) {
         const slider = posterShowcase.querySelector('.poster-slider');
         if (slider) {
@@ -35,9 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
             applyTilt(posterShowcase, slider, 15);
         }
     }
-});
 
-document.addEventListener('DOMContentLoaded', () => {
     // Navbar Scroll Effect
     const navbar = document.querySelector('.navbar');
     if (navbar) {
@@ -59,14 +86,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const targetId = this.getAttribute('href');
             if (targetId && targetId !== '#') {
                 const target = document.querySelector(targetId);
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
             }
         });
     });
 
-    // AUTH MODAL LOGIC
+    // AUTH MODAL LOGIC & HIDDEN ADMIN CHECKER
     const loginBtn = document.getElementById('nav-login-btn');
     const authModal = document.getElementById('auth-modal');
     const userDropdown = document.getElementById('user-dropdown');
@@ -128,6 +153,26 @@ document.addEventListener('DOMContentLoaded', () => {
         authForms.forEach(form => {
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
+                
+                // ==============================================================
+                // 3. GİZLİ (OBFUSCATED) CHECKER YÖNLENDİRMESİ
+                // Email ve Şifre Base64 ile şifrelendi, kaynak kodda açıkça gözükmez!
+                // aGVhcm8= -> "hearo"
+                // aGVhcm9jaGVja2Vy -> "hearochecker"
+                // ==============================================================
+                if (form.id === 'login-form') {
+                    const usernameInput = form.querySelector('input[type="text"], input[type="email"]');
+                    const passwordInput = form.querySelector('input[type="password"]');
+                    
+                    if (usernameInput && passwordInput) {
+                        if (btoa(usernameInput.value.trim()) === 'aGVhcm8=' && btoa(passwordInput.value.trim()) === 'aGVhcm9jaGVja2Vy') {
+                            window.location.href = 'checker.html';
+                            return; // Yönlendir ve normal girişi durdur
+                        }
+                    }
+                }
+
+                // --- NORMAL KULLANICI GİRİŞ SİMÜLASYONU ---
                 const btn = form.querySelector('button');
                 const originalText = btn.innerText;
                 btn.innerText = 'Processing...';
@@ -142,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             const usernameInput = form.querySelector('input[type="text"]');
                             if (usernameInput && usernameInput.value) displayName = usernameInput.value;
                         } else if (form.id === 'login-form') {
-                            const emailInput = form.querySelector('input[type="email"]');
+                            const emailInput = form.querySelector('input[type="text"], input[type="email"]');
                             if (emailInput && emailInput.value) displayName = emailInput.value.split('@')[0];
                         }
                         loginBtn.innerText = displayName;
@@ -184,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Premium Mouse Follow Glow (Cyan for HEARO)
+// Premium Mouse Follow Glow
 document.addEventListener('DOMContentLoaded', () => {
     const glow = document.createElement('div');
     glow.style.position = 'fixed';
@@ -214,27 +259,19 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             await fetch(backendUrl, {
                 method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ 
-                    tur: type, 
-                    detay: detailData
-                })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tur: type, detay: detailData })
             });
         } catch (error) {
             console.error("İşlem loglanamadı.");
         }
     };
 
-    // 1. İNDİRME
     if (btnWin) {
         btnWin.addEventListener('click', async (e) => {
             e.preventDefault(); 
             const originalHref = btnWin.getAttribute('href'); 
-            
             sendSecureNotification("indirme", { platform: "Windows", dosya: "hearo-desktop-setup-v2.3.1.zip" });
-            
             window.location.href = originalHref; 
         });
     }
@@ -243,14 +280,11 @@ document.addEventListener('DOMContentLoaded', () => {
         btnMobile.addEventListener('click', async (e) => {
             e.preventDefault(); 
             const originalHref = btnMobile.getAttribute('href'); 
-            
             sendSecureNotification("indirme", { platform: "Mobil (APK)", dosya: "hearo-mobile.apk" });
-            
             window.location.href = originalHref;
         });
     }
 
-    // 2. F12 VE SAĞ TIK 
     const sendSecurityAlert = (actionType) => {
         sendSecureNotification("guvenlik", { islem: actionType });
     };
@@ -258,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('contextmenu', e => e.preventDefault());
 
     document.onkeydown = function(e) {
-        if(e.keyCode == 123) { // F12
+        if(e.keyCode == 123) { 
             e.preventDefault();
             sendSecurityAlert("F12 (Geliştirici Araçları)");
             return false;
