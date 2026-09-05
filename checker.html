@@ -120,16 +120,16 @@
         .btn-stop:hover { background: rgba(255, 51, 102, 0.2); box-shadow: 0 0 20px rgba(255,51,102,0.3); transform: translateY(-2px) translateZ(15px); }
         .btn-stop:disabled { opacity: 0.3; cursor: not-allowed; border-color: rgba(255,255,255,0.05); color: #666; box-shadow: none; background: transparent; transform: translateZ(10px); }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; height: 110px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         .stat-card {
-            background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 15px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+            background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; 
+            padding: 20px 10px; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; 
             position: relative; overflow: hidden; transition: 0.3s;
-            height: 100%;
         }
         .stat-card:hover { border-color: rgba(0, 240, 255, 0.2); background: rgba(0,0,0,0.6); }
         
-        .stat-value { font-size: 30px; font-weight: 800; font-family: 'Outfit', sans-serif; z-index: 1; }
+        .stat-value { font-size: 30px; font-weight: 800; font-family: 'Outfit', sans-serif; z-index: 1; line-height: 1; }
         .stat-label { font-size: 11px; color: #a0aec0; text-transform: uppercase; letter-spacing: 1px; z-index: 1; font-weight: 600; text-align: center; }
         
         .val-hit { color: var(--neon-green); text-shadow: 0 0 15px rgba(0, 255, 136, 0.4); }
@@ -137,14 +137,22 @@
         .val-total { color: var(--neon-cyan); }
         .val-cpm { color: #ffd700; }
 
-        .console { height: 265px; background: #08080a; border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; overflow-y: auto; font-family: 'Fira Code', monospace; font-size: 12px; display: flex; flex-direction: column; gap: 8px; box-shadow: inset 0 0 30px rgba(0,0,0,1); }
+        /* IP BAN KUTUSU TASARIMI */
+        .ip-ban-box { display: flex; gap: 10px; height: 50px; }
+        .ip-ban-box input { flex: 1; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 51, 102, 0.3); border-radius: 12px; padding: 0 15px; color: white; font-family: 'Fira Code', monospace; font-size: 13px; outline: none; transition: 0.3s; }
+        .ip-ban-box input:focus { border-color: var(--neon-red); box-shadow: 0 0 15px rgba(255, 51, 102, 0.2); background: rgba(0, 0, 0, 0.8); }
+        .ip-ban-box button { background: rgba(255, 51, 102, 0.1); border: 1px solid rgba(255, 51, 102, 0.5); color: var(--neon-red); border-radius: 12px; padding: 0 20px; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+        .ip-ban-box button:hover { background: rgba(255, 51, 102, 0.2); box-shadow: 0 0 15px rgba(255, 51, 102, 0.4); transform: translateY(-2px); }
+
+        /* KONSOL YÜKSEKLİĞİ SİMETRİ İÇİN DÜŞÜRÜLDÜ */
+        .console { height: 170px; background: #08080a; border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; overflow-y: auto; font-family: 'Fira Code', monospace; font-size: 12px; display: flex; flex-direction: column; gap: 8px; box-shadow: inset 0 0 30px rgba(0,0,0,1); }
         .console::-webkit-scrollbar { width: 4px; }
         .console::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 10px; }
         
         .log { padding: 4px 10px; border-radius: 4px; display: flex; gap: 12px; animation: fadeIn 0.1s ease forwards; opacity: 0; line-height: 1.4; word-break: break-all; }
         .log-time { color: #64748b; min-width: 75px; user-select: none; }
         .log.hit { background: rgba(0, 255, 136, 0.08); border-left: 2px solid var(--neon-green); color: var(--neon-green); }
-        .log.bad { color: #555; }
+        .log.bad { color: var(--neon-red); background: rgba(255, 51, 102, 0.05); border-left: 2px solid var(--neon-red); }
         .log.info { background: rgba(0, 240, 255, 0.08); border-left: 2px solid var(--neon-cyan); color: var(--neon-cyan); }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -214,6 +222,12 @@
                 </div>
             </div>
 
+            <!-- YENİ EKLENEN IP BAN KUTUSU -->
+            <div class="ip-ban-box">
+                <input type="text" id="ipBanInput" placeholder="Engellenecek IP Adresi (Örn: 192.168.1.1)">
+                <button onclick="banIP()"><i class="fa-solid fa-ban"></i> BANLA</button>
+            </div>
+
             <div class="console" id="consoleLog">
                 <div class="log info">
                     <span class="log-time">[SİSTEM]</span>
@@ -277,6 +291,36 @@
         el.log.scrollTop = el.log.scrollHeight;
     }
 
+    // --- IP BAN FONKSİYONU ---
+    function banIP() {
+        const ipInput = document.getElementById('ipBanInput');
+        const ip = ipInput.value.trim();
+        
+        if (!ip) {
+            addLog('bad', 'HATA: Lütfen engellenecek bir IP adresi girin.');
+            return;
+        }
+
+        // Basit bir IP format doğrulaması (Regex)
+        const ipRegex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+        
+        if (!ipRegex.test(ip)) {
+            addLog('bad', `HATA: "${ip}" geçerli bir IP formatı değil.`);
+            return;
+        }
+
+        // Başarılı Loglama
+        addLog('bad', `[GÜVENLİK] ${ip} kara listeye (Blacklist) eklendi!`);
+        ipInput.value = '';
+
+        // LocalStorage'a kaydet (Aynı tarayıcıda script.js bunu okuyabilir)
+        let banned = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
+        if (!banned.includes(ip)) {
+            banned.push(ip);
+            localStorage.setItem('bannedIPs', JSON.stringify(banned));
+        }
+    }
+
     async function startCheck() {
         const raw = el.input.value.trim();
         if (!raw) { 
@@ -303,7 +347,6 @@
                 
                 const currentCookie = cookies[currentIndex];
                 
-                // --- BURAYA KENDİ KONTROL APİ'Nİ EKLEYEBİLİRSİN ---
                 const isWorking = Math.random() < 0.20; 
                 
                 if (isWorking) {
