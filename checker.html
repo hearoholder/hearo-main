@@ -15,43 +15,159 @@
             --glass-bg: rgba(10, 10, 12, 0.75);
             --glass-border: rgba(0, 240, 255, 0.15);
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: white; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: white;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; 
+        }
+
+        /* Nebula & Glow Efektleri */
         .nebula-blob { position: absolute; filter: blur(100px); opacity: 0.5; z-index: -2; border-radius: 50%; }
         .blob-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: rgba(0, 240, 255, 0.15); }
         .blob-2 { bottom: -20%; right: -10%; width: 600px; height: 600px; background: rgba(0, 240, 255, 0.1); }
-        .mouse-glow { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1; }
-        .tilt-container { width: 95%; max-width: 1300px; perspective: 1200px; }
-        .checker-wrapper { background: var(--glass-bg); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 40px; box-shadow: 0 30px 60px rgba(0,0,0,0.8); display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px; }
-        .header { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 25px; height: 75px; }
-        .logo { font-family: 'Outfit', sans-serif; font-size: 30px; font-weight: 800; display: flex; align-items: center; gap: 12px; }
+        
+        .mouse-glow {
+            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: -1; transition: background 0.1s ease;
+        }
+
+        /* Pürüzsüz Giriş Animasyonu */
+        @keyframes smoothEnter {
+            0% { opacity: 0; transform: translateY(30px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .tilt-container {
+            width: 95%;
+            max-width: 1300px;
+            animation: smoothEnter 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            perspective: 1200px; 
+        }
+
+        .checker-wrapper {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 1px 10px rgba(0, 240, 255, 0.1);
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 30px;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+        }
+
+        .header { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 25px; height: 75px; transform: translateZ(30px); }
+        .input-area { display: flex; flex-direction: column; gap: 15px; position: relative; transform: translateZ(20px); }
+        .right-panel { display: flex; flex-direction: column; gap: 15px; transform: translateZ(20px); }
+        
+        .logo { font-family: 'Outfit', sans-serif; font-size: 30px; font-weight: 800; letter-spacing: 1px; display: flex; align-items: center; gap: 12px; }
+        .logo svg { width: 35px; height: 35px; }
         .logo span { color: var(--neon-cyan); text-shadow: 0 0 20px rgba(0, 240, 255, 0.4); }
-        .status-badge { background: rgba(0, 240, 255, 0.05); color: var(--neon-cyan); padding: 10px 20px; border-radius: 50px; font-size: 13px; font-weight: 600; border: 1px solid var(--glass-border); text-transform: uppercase; }
-        .success-label { display: none; color: var(--neon-green); font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700; align-items: center; gap: 8px; margin-bottom: -5px; }
-        textarea { width: 100%; height: 320px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px; color: #a0aec0; font-family: 'Fira Code', monospace; font-size: 13px; resize: none; outline: none; line-height: 1.6; }
-        textarea:focus { border-color: var(--neon-cyan); color: #fff; background: rgba(0,0,0,0.8); }
-        textarea.success-mode { border-color: var(--neon-green); color: var(--neon-green); background: rgba(0, 255, 136, 0.05); }
+        
+        .status-badge { background: rgba(0, 240, 255, 0.05); color: var(--neon-cyan); padding: 10px 20px; border-radius: 50px; font-size: 13px; font-weight: 600; border: 1px solid var(--glass-border); text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 0 15px rgba(0, 240, 255, 0.1); transition: 0.3s; }
+
+        .success-label {
+            display: none;
+            color: var(--neon-green);
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            align-items: center;
+            gap: 8px;
+            animation: fadeIn 0.5s ease;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            margin-bottom: -5px;
+        }
+
+        textarea {
+            width: 100%; 
+            height: 320px; 
+            background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px; padding: 20px; color: #a0aec0; font-family: 'Fira Code', monospace; font-size: 13px;
+            resize: none; outline: none; transition: 0.3s ease; line-height: 1.6;
+        }
+        textarea:focus { border-color: var(--neon-cyan); box-shadow: 0 0 25px rgba(0, 240, 255, 0.15); color: #fff; background: rgba(0, 0, 0, 0.8); }
+        textarea::-webkit-scrollbar { width: 6px; }
+        textarea::-webkit-scrollbar-thumb { background: rgba(0, 240, 255, 0.3); border-radius: 10px; }
+        
+        textarea.success-mode { border-color: var(--neon-green); box-shadow: 0 0 30px rgba(0, 255, 136, 0.2); color: var(--neon-green); background: rgba(0, 255, 136, 0.05); font-weight: 500; }
+
         .controls { display: flex; gap: 15px; height: 55px; }
-        button { flex: 1; border: none; border-radius: 14px; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; height: 100%; }
-        .btn-start { background: linear-gradient(90deg, #00f0ff 0%, #00c8d4 100%); color: #050505; }
-        .btn-start:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-stop { background: rgba(255, 51, 102, 0.1); border: 1px solid rgba(255,51,102,0.3); color: var(--neon-red); }
+        
+        button {
+            border: none; border-radius: 14px; font-family: 'Outfit', sans-serif;
+            font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.3s ease;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+            transform: translateZ(10px);
+        }
+        
+        .btn-start { flex: 1; background: linear-gradient(90deg, #00f0ff 0%, #00c8d4 100%); color: #050505; box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3); height: 100%; }
+        .btn-start:hover { transform: translateY(-2px) translateZ(15px); box-shadow: 0 8px 25px rgba(0, 240, 255, 0.5); }
+        .btn-start:disabled { opacity: 0.5; cursor: not-allowed; transform: translateZ(10px); box-shadow: none; filter: grayscale(100%); }
+
+        .btn-stop { flex: 1; background: rgba(255, 51, 102, 0.1); border: 1px solid rgba(255,51,102,0.3); color: var(--neon-red); height: 100%; }
+        .btn-stop:hover { background: rgba(255, 51, 102, 0.2); box-shadow: 0 0 20px rgba(255,51,102,0.3); transform: translateY(-2px) translateZ(15px); }
+        .btn-stop:disabled { opacity: 0.3; cursor: not-allowed; border-color: rgba(255,255,255,0.05); color: #666; box-shadow: none; background: transparent; transform: translateZ(10px); }
+
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .stat-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 20px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
-        .stat-value { font-size: 30px; font-weight: 800; font-family: 'Outfit', sans-serif; line-height: 1; }
-        .stat-label { font-size: 11px; color: #a0aec0; text-transform: uppercase; font-weight: 600; }
-        .val-hit { color: var(--neon-green); }
-        .val-bad { color: var(--neon-red); }
+        .stat-card {
+            background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; 
+            padding: 20px 10px; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; 
+            position: relative; overflow: hidden; transition: 0.3s;
+        }
+        .stat-card:hover { border-color: rgba(0, 240, 255, 0.2); background: rgba(0,0,0,0.6); }
+        
+        .stat-value { font-size: 30px; font-weight: 800; font-family: 'Outfit', sans-serif; z-index: 1; line-height: 1; }
+        .stat-label { font-size: 11px; color: #a0aec0; text-transform: uppercase; letter-spacing: 1px; z-index: 1; font-weight: 600; text-align: center; }
+        
+        .val-hit { color: var(--neon-green); text-shadow: 0 0 15px rgba(0, 255, 136, 0.4); }
+        .val-bad { color: var(--neon-red); text-shadow: 0 0 15px rgba(255, 51, 102, 0.4); }
         .val-total { color: var(--neon-cyan); }
         .val-cpm { color: #ffd700; }
-        .ip-ban-box { display: flex; gap: 8px; height: 48px; }
-        .ip-ban-box input { flex: 1; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,51,102,0.3); border-radius: 12px; padding: 0 15px; color: white; font-family: 'Fira Code', monospace; font-size: 12px; outline: none; }
-        .console { height: 160px; background: #08080a; border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; overflow-y: auto; font-family: 'Fira Code', monospace; font-size: 12px; display: flex; flex-direction: column; gap: 8px; }
-        .log { padding: 4px 10px; border-radius: 4px; display: flex; gap: 12px; line-height: 1.4; word-break: break-all; }
+
+        /* IP BAN KUTUSU */
+        .ip-ban-box { display: flex; gap: 8px; height: 48px; align-items: center; }
+        .ip-ban-box input { flex: 1; height: 100%; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 51, 102, 0.3); border-radius: 12px; padding: 0 15px; color: white; font-family: 'Fira Code', monospace; font-size: 12px; outline: none; transition: 0.3s; }
+        .ip-ban-box input:focus { border-color: var(--neon-red); box-shadow: 0 0 15px rgba(255, 51, 102, 0.2); background: rgba(0, 0, 0, 0.8); }
+        
+        .ip-btn-ban { height: 100%; padding: 0 14px; background: rgba(255, 51, 102, 0.1); border: 1px solid rgba(255, 51, 102, 0.5); color: var(--neon-red); border-radius: 12px; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        .ip-btn-ban:hover { background: rgba(255, 51, 102, 0.2); box-shadow: 0 0 15px rgba(255, 51, 102, 0.4); }
+        
+        .ip-btn-unban { height: 100%; padding: 0 14px; background: rgba(0, 255, 136, 0.1); border: 1px solid rgba(0, 255, 136, 0.5); color: var(--neon-green); border-radius: 12px; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        .ip-btn-unban:hover { background: rgba(0, 255, 136, 0.2); box-shadow: 0 0 15px rgba(0, 255, 136, 0.4); }
+
+        .console { height: 160px; background: #08080a; border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; overflow-y: auto; font-family: 'Fira Code', monospace; font-size: 12px; display: flex; flex-direction: column; gap: 8px; box-shadow: inset 0 0 30px rgba(0,0,0,1); }
+        .console::-webkit-scrollbar { width: 4px; }
+        .console::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 10px; }
+        
+        .log { padding: 4px 10px; border-radius: 4px; display: flex; gap: 12px; animation: fadeIn 0.1s ease forwards; opacity: 0; line-height: 1.4; word-break: break-all; }
+        .log-time { color: #64748b; min-width: 75px; user-select: none; }
         .log.hit { background: rgba(0, 255, 136, 0.08); border-left: 2px solid var(--neon-green); color: var(--neon-green); }
         .log.bad { color: var(--neon-red); background: rgba(255, 51, 102, 0.05); border-left: 2px solid var(--neon-red); }
         .log.info { background: rgba(0, 240, 255, 0.08); border-left: 2px solid var(--neon-cyan); color: var(--neon-cyan); }
-        .btn-back { position: absolute; top: 30px; left: 40px; color: #a0aec0; text-decoration: none; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; z-index: 10; font-family: 'Outfit', sans-serif; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .btn-back { position: absolute; top: 30px; left: 40px; color: #a0aec0; text-decoration: none; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; transition: 0.3s; z-index: 10; font-family: 'Outfit', sans-serif; }
+        .btn-back:hover { color: var(--neon-cyan); text-shadow: 0 0 15px rgba(0, 240, 255, 0.5); transform: translateX(-5px); }
+        
+        .top-actions { display: flex; justify-content: space-between; align-items: center; margin-top: -5px; height: 20px; }
+        .btn-clear { background: none; border: none; color: #666; font-family: 'Inter'; font-size: 12px; cursor: pointer; transition: 0.2s; }
+        .btn-clear:hover { color: var(--neon-cyan); }
     </style>
 </head>
 <body>
@@ -59,21 +175,32 @@
 <div class="mouse-glow" id="glow"></div>
 <div class="nebula-blob blob-1"></div>
 <div class="nebula-blob blob-2"></div>
+
 <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i> HEARO'ya Dön</a>
 
 <div class="tilt-container">
-    <div class="checker-wrapper">
+    <div class="checker-wrapper" id="tiltWrapper">
         <div class="header">
-            <div class="logo"><svg viewBox="0 0 24 24" width="35" height="35" fill="none"><path d="M21.9999 15L17.9999 21.9282L9.99989 21.9282L13.9999 15L21.9999 15Z" fill="#00f0ff"/><path d="M14.0001 9.00003L18.0001 2.07183L10.0001 2.07186L6.00015 9.00007L14.0001 9.00003Z" fill="#00f0ff"/></svg>HEARO <span>GERÇEK CHECKER</span></div>
-            <div class="status-badge" id="statusBadge"><i class="fa-solid fa-bolt"></i> SİSTEM HAZIR</div>
+            <div class="logo">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21.9999 15L17.9999 21.9282L9.99989 21.9282L13.9999 15L21.9999 15Z" fill="#00f0ff"/>
+                    <path d="M14.0001 9.00003L18.0001 2.07183L10.0001 2.07186L6.00015 9.00007L14.0001 9.00003Z" fill="#00f0ff"/>
+                </svg>
+                HEARO <span>COOKIE CHECKER</span>
+            </div>
+            <div class="status-badge" id="statusBadge"><i class="fa-solid fa-bolt"></i> GERÇEK MOTOR HAZIR</div>
         </div>
 
         <div class="input-area">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <div id="successLabel" class="success-label"><i class="fa-solid fa-check-circle"></i> ÇALIŞAN COOKIELER</div>
-                <button onclick="clearInput()" style="background:none; border:none; color:#666; cursor:pointer; font-size:12px;"><i class="fa-solid fa-trash-can"></i> Temizle</button>
+            <div class="top-actions">
+                <div id="successLabel" class="success-label">
+                    <i class="fa-solid fa-check-circle"></i> ÇALIŞAN (GEÇERLİ) COOKIELER
+                </div>
+                <button class="btn-clear" onclick="clearInput()" style="margin-left: auto;"><i class="fa-solid fa-trash-can"></i> Girdiyi Temizle</button>
             </div>
-            <textarea id="cookieInput" placeholder="Gerçek çerezleri buraya yapıştırın..."></textarea>
+            
+            <textarea id="cookieInput" placeholder="Gerçek çerezleri buraya yapıştırın...&#10;Sistem doğrudan Cloudflare Worker üzerinden test eder."></textarea>
+            
             <div class="controls">
                 <button class="btn-start" id="btnStart" onclick="startCheck()"><i class="fa-solid fa-play"></i> Başlat</button>
                 <button class="btn-stop" id="btnStop" onclick="stopCheck()" disabled><i class="fa-solid fa-power-off"></i> Durdur</button>
@@ -82,20 +209,36 @@
 
         <div class="right-panel">
             <div class="stats-grid">
-                <div class="stat-card"><span class="stat-value val-hit" id="hitCount">0</span><span class="stat-label">Çalışan (Hit)</span></div>
-                <div class="stat-card"><span class="stat-value val-bad" id="badCount">0</span><span class="stat-label">Bozuk (Bad)</span></div>
-                <div class="stat-card"><span class="stat-value val-total" id="totalCount">0</span><span class="stat-label">Taranan</span></div>
-                <div class="stat-card"><span class="stat-value val-cpm" id="cpmCount">0</span><span class="stat-label">Hız (CPM)</span></div>
+                <div class="stat-card">
+                    <span class="stat-value val-hit" id="hitCount">0</span>
+                    <span class="stat-label">Çalışan (Hit)</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value val-bad" id="badCount">0</span>
+                    <span class="stat-label">Bozuk (Bad)</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value val-total" id="totalCount">0</span>
+                    <span class="stat-label">Taranan</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value val-cpm" id="cpmCount">0</span>
+                    <span class="stat-label">Hız (CPM)</span>
+                </div>
             </div>
 
+            <!-- DÜZGÜN HİZALANMIŞ IP BAN KUTUSU -->
             <div class="ip-ban-box">
-                <input type="text" id="ipBanInput" placeholder="IP Adresi">
-                <button onclick="manageIP('ban_ip')" style="background:rgba(255,51,102,0.1); border:1px solid rgba(255,51,102,0.5); color:var(--neon-red); border-radius:10px; padding:0 12px; font-weight:700; cursor:pointer;">Ban</button>
-                <button onclick="manageIP('unban_ip')" style="background:rgba(0,255,136,0.1); border:1px solid rgba(0,255,136,0.5); color:var(--neon-green); border-radius:10px; padding:0 12px; font-weight:700; cursor:pointer;">Aç</button>
+                <input type="text" id="ipBanInput" placeholder="IP Adresi (Örn: 192.168.1.1)">
+                <button class="ip-btn-ban" onclick="manageIP('ban_ip')"><i class="fa-solid fa-ban"></i> Ban</button>
+                <button class="ip-btn-unban" onclick="manageIP('unban_ip')"><i class="fa-solid fa-unlock"></i> Aç</button>
             </div>
 
             <div class="console" id="consoleLog">
-                <div class="log info"><span style="color:#64748b;">[SİSTEM]</span> <span>Gerçek doğrulama motoru hazır.</span></div>
+                <div class="log info">
+                    <span class="log-time">[SİSTEM]</span>
+                    <span>HEARO Gerçek Doğrulama Motoru devrede. Veri bekleniyor...</span>
+                </div>
             </div>
         </div>
     </div>
@@ -103,7 +246,28 @@
 
 <script>
     const backendUrl = "https://billowing-smoke-cb6b.hearo.workers.dev";
-    let isRunning = false, cookies = [], currentIndex = 0, hits = 0, bads = 0, startTime = 0, hitList = [];
+    
+    const glow = document.getElementById('glow');
+    document.addEventListener('mousemove', (e) => {
+        glow.style.background = `radial-gradient(circle 600px at ${e.clientX}px ${e.clientY}px, rgba(0, 240, 255, 0.05), transparent 40%)`;
+    });
+
+    const tiltWrapper = document.getElementById('tiltWrapper');
+    document.addEventListener('mousemove', (e) => {
+        const xAxis = ((window.innerWidth / 2) - e.pageX) / 100;
+        const yAxis = ((window.innerHeight / 2) - e.pageY) / 100;
+        tiltWrapper.style.transform = `rotateY(${xAxis}deg) rotateX(${-yAxis}deg)`;
+    });
+
+    document.addEventListener('mouseleave', () => {
+        tiltWrapper.style.transform = `rotateY(0deg) rotateX(0deg)`;
+    });
+
+    let isRunning = false; let cookies = []; let currentIndex = 0;
+    let hits = 0; let bads = 0; let startTime = 0;
+    let hitList = []; 
+    
+    const MAX_LOG_LINES = 100; 
 
     const el = {
         input: document.getElementById('cookieInput'), btnStart: document.getElementById('btnStart'),
@@ -113,16 +277,7 @@
         badge: document.getElementById('statusBadge'), successLabel: document.getElementById('successLabel')
     };
 
-    function addLog(type, msg) {
-        const d = new Date();
-        const time = `[${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}]`;
-        const div = document.createElement('div');
-        div.className = `log ${type}`;
-        div.innerHTML = `<span style="color:#64748b;">${time}</span><span>${msg}</span>`;
-        el.log.appendChild(div);
-        if(el.log.children.length > 100) el.log.removeChild(el.log.firstChild);
-        el.log.scrollTop = el.log.scrollHeight;
-    }
+    const getTime = () => { const d = new Date(); return `[${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}]`; };
 
     function clearInput() {
         el.input.value = '';
@@ -130,24 +285,79 @@
         el.successLabel.style.display = 'none';
     }
 
+    function addLog(type, msg) {
+        const div = document.createElement('div');
+        div.className = `log ${type}`;
+        div.innerHTML = `<span class="log-time">${getTime()}</span><span>${msg}</span>`;
+        el.log.appendChild(div);
+        
+        if (el.log.children.length > MAX_LOG_LINES) {
+            el.log.removeChild(el.log.firstChild);
+        }
+        el.log.scrollTop = el.log.scrollHeight;
+    }
+
+    async function manageIP(actionType) {
+        const ipInput = document.getElementById('ipBanInput');
+        const ip = ipInput.value.trim();
+        
+        if (!ip) {
+            addLog('bad', 'HATA: Lütfen bir IP adresi girin.');
+            return;
+        }
+
+        const ipRegex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+        if (!ipRegex.test(ip)) {
+            addLog('bad', `HATA: "${ip}" geçerli bir IP formatı değil.`);
+            return;
+        }
+
+        try {
+            const res = await fetch(backendUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tur: actionType, detay: { ip: ip } })
+            });
+
+            if (res.ok) {
+                if (actionType === 'ban_ip') {
+                    addLog('bad', `[GÜVENLİK] ${ip} başarıyla banlandı ve Discord'a bildirildi!`);
+                } else {
+                    addLog('hit', `[GÜVENLİK] ${ip} adresinin yasağı kaldırıldı ve Discord'a bildirildi!`);
+                }
+                ipInput.value = '';
+            } else {
+                addLog('bad', `[HATA] İşlem gerçekleştirilemedi.`);
+            }
+        } catch(e) {
+            addLog('bad', `[HATA] Sunucuya bağlanılamadı.`);
+        }
+    }
+
     async function startCheck() {
         const raw = el.input.value.trim();
-        if(!raw) { addLog('bad', 'HATA: Çerez verisi girilmedi.'); return; }
-        cookies = raw.split('\n').filter(l => l.trim() !== '' && !l.trim().startsWith('#'));
-        if(cookies.length === 0) return;
+        if (!raw) { 
+            addLog('bad', 'HATA: Lütfen kontrol edilecek çerezleri girin.'); 
+            return; 
+        }
+        
+        cookies = raw.split('\n').filter(line => line.trim() !== '' && !line.trim().startsWith('#'));
+        if (cookies.length === 0) return;
 
         isRunning = true; currentIndex = 0; hits = 0; bads = 0; startTime = Date.now(); hitList = [];
-        el.input.classList.remove('success-mode'); el.successLabel.style.display = 'none';
+        el.input.classList.remove('success-mode');
+        el.successLabel.style.display = 'none';
+        
         el.btnStart.disabled = true; el.btnStop.disabled = false; el.input.disabled = true;
-        el.badge.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> GERÇEK KONTROL YAPILIYOR...';
-
-        addLog('info', `${cookies.length} adet çerez doğrulamaya gönderiliyor...`);
-
-        // Her bir çerezi sırayla gerçek worker API'sine gönderip test ediyoruz
+        el.badge.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> DOĞRULANIYOR...';
+        el.badge.style.color = 'var(--neon-cyan)'; el.badge.style.borderColor = 'var(--neon-cyan)';
+        
+        addLog('info', `Toplam ${cookies.length} çerez gerçek motor ile test ediliyor...`);
+        
         for (currentIndex = 0; currentIndex < cookies.length; currentIndex++) {
             if (!isRunning) break;
             const currentCookie = cookies[currentIndex];
-
+            
             try {
                 const response = await fetch(backendUrl, {
                     method: 'POST',
@@ -155,63 +365,55 @@
                     body: JSON.stringify({ tur: "check_cookie", detay: { cookie: currentCookie } })
                 });
                 const data = await response.json();
-
+                
                 if (data.valid) {
                     hits++;
-                    hitList.push(currentCookie);
-                    addLog('hit', `[GEÇERLİ] ${currentCookie.substring(0, 30)}...`);
+                    hitList.push(currentCookie); 
+                    addLog('hit', `[GEÇERLİ] ${currentCookie.substring(0, 35)}...`);
                 } else {
                     bads++;
-                    addLog('bad', `[BOZUK] ${currentCookie.substring(0, 30)}...`);
+                    addLog('bad', `[BOZUK] ${currentCookie.substring(0, 35)}...`); 
                 }
             } catch (err) {
                 bads++;
-                addLog('bad', `[HATA] İstek atılamadı.`);
+                addLog('bad', `[HATA] Bağlantı kurulamadı.`);
             }
-
-            // Arayüzü güncelle
-            el.hit.textContent = hits;
-            el.bad.textContent = bads;
+            
+            // İstatistikleri Güncelle
+            el.hit.textContent = hits; 
+            el.bad.textContent = bads; 
             el.total.textContent = `${currentIndex + 1} / ${cookies.length}`;
+            
             const mins = (Date.now() - startTime) / 1000 / 60;
             if (mins > 0) el.cpm.textContent = Math.floor((currentIndex + 1) / mins).toLocaleString();
         }
 
-        if(isRunning) {
-            isRunning = false;
-            el.btnStart.disabled = false; el.btnStop.disabled = true; el.input.disabled = false;
-            el.badge.innerHTML = '<i class="fa-solid fa-check-double"></i> TAMAMLANDI';
-            addLog('info', `Tarama Bitti! Sonuç: ${hits} Çalışan | ${bads} Bozuk.`);
-
-            if(hits > 0) {
-                el.successLabel.style.display = 'flex';
-                el.input.value = hitList.join('\n');
-                el.input.classList.add('success-mode');
-            }
-        }
+        if(isRunning) finishCheck();
     }
 
     function stopCheck() {
         isRunning = false;
         el.btnStart.disabled = false; el.btnStop.disabled = true; el.input.disabled = false;
         el.badge.innerHTML = '<i class="fa-solid fa-ban"></i> İPTAL EDİLDİ';
-        addLog('bad', 'Kontrol işlemi durduruldu.');
+        el.badge.style.color = 'var(--neon-red)'; el.badge.style.borderColor = 'rgba(255,51,102,0.5)';
+        addLog('info', 'İşlem kullanıcı tarafından durduruldu.');
     }
 
-    async function manageIP(actionType) {
-        const ip = document.getElementById('ipBanInput').value.trim();
-        if(!ip) { addLog('bad', 'IP giriniz.'); return; }
-        try {
-            const res = await fetch(backendUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tur: actionType, detay: { ip: ip } })
-            });
-            if(res.ok) {
-                addLog(actionType === 'ban_ip' ? 'bad' : 'hit', `IP ${ip} ${actionType === 'ban_ip' ? 'banlandı' : 'açıldı'}.`);
-                document.getElementById('ipBanInput').value = '';
-            } else { addLog('bad', 'İşlem başarısız.'); }
-        } catch(e) { addLog('bad', 'Sunucu hatası.'); }
+    function finishCheck() {
+        isRunning = false;
+        el.btnStart.disabled = false; el.btnStop.disabled = true; el.input.disabled = false;
+        el.badge.innerHTML = '<i class="fa-solid fa-check-double"></i> TAMAMLANDI';
+        el.badge.style.color = 'var(--neon-green)'; el.badge.style.borderColor = 'rgba(0,255,136,0.5)';
+        addLog('info', `Doğrulama Bitti! Sonuç: ${hits} Çalışan | ${bads} Bozuk.`);
+
+        if (hits > 0) {
+            el.successLabel.style.display = 'flex'; 
+            el.input.value = hitList.join('\n'); 
+            el.input.classList.add('success-mode');
+            addLog('hit', '>>> Çalışan cookieler ekrana yansıtıldı. Hepsini kopyalayabilirsiniz.');
+        } else {
+            el.input.value = "Maalesef çalışan cookie bulunamadı.";
+        }
     }
 </script>
 </body>
