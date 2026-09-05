@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEARO ADMIN | Ultra Premium Elite Checker</title>
+    <title>HEARO ADMIN | Ultra Premium Checker</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -12,17 +12,18 @@
             --neon-cyan: #00e5ff; 
             --neon-green: #00ffaa; 
             --neon-red: #ff2a5f; 
-            --panel-bg: rgba(6, 10, 20, 0.95); /* Keskin ve net koyu arkaplan (Bulanıklık YOK) */
+            /* Panel saydamlaştırıldı, bulanıklık (blur) yok */
+            --panel-bg: rgba(0, 0, 0, 0.45); 
             --panel-border: rgba(0, 229, 255, 0.15);
             --elite-shadow: 0 40px 80px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(0, 229, 255, 0.3);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* DERİN UZAY ARKAPLANI */
+        /* SİMSİYAH DERİN UZAY ARKAPLANI */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #02040a;
+            background-color: #000000;
             color: white;
             height: 100vh;
             display: flex;
@@ -31,40 +32,37 @@
             overflow: hidden; 
         }
 
-        /* KUZEY IŞIKLARI (AURORA) */
+        /* GERÇEKÇİ KUZEY IŞIKLARI (AURORA) */
         .aurora-container {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             overflow: hidden; z-index: -3; pointer-events: none;
+            background: #000000;
         }
-        .aurora {
-            position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: conic-gradient(from 0deg at 50% 50%, 
-                rgba(0, 229, 255, 0.05) 0deg, 
-                rgba(0, 102, 255, 0.05) 120deg, 
-                transparent 180deg, 
-                rgba(0, 229, 255, 0.02) 240deg, 
-                rgba(0, 255, 170, 0.05) 360deg);
-            animation: rotateAurora 30s linear infinite;
-        }
-        @keyframes rotateAurora { 100% { transform: rotate(360deg); } }
+        .aurora-1 { position: absolute; top: -10%; left: -20%; width: 60vw; height: 40vh; background: rgba(0, 255, 170, 0.12); filter: blur(120px); animation: auroraX 20s infinite alternate linear; }
+        .aurora-2 { position: absolute; top: 10%; right: -20%; width: 50vw; height: 50vh; background: rgba(0, 229, 255, 0.12); filter: blur(150px); animation: auroraY 25s infinite alternate linear; }
+        .aurora-3 { position: absolute; bottom: -20%; left: 20%; width: 70vw; height: 40vh; background: rgba(0, 102, 255, 0.08); filter: blur(100px); animation: auroraX 30s infinite alternate-reverse linear; }
+        
+        @keyframes auroraX { 0% { transform: translateX(0); } 100% { transform: translateX(20vw); } }
+        @keyframes auroraY { 0% { transform: translateY(0); } 100% { transform: translateY(20vh); } }
 
-        /* YILDIZLAR İÇİN CANVAS */
+        /* YILDIZLAR VE METEORLAR İÇİN CANVAS */
         #starCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -2; }
 
         /* GİRİŞ ANİMASYONU */
         @keyframes smoothEnter { 0% { opacity: 0; transform: translateY(30px) scale(0.98); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
         .tilt-container { width: 95%; max-width: 1300px; animation: smoothEnter 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; perspective: 1200px; z-index: 10;}
         
-        /* KESKİN ANA PANEL (BLUR KALDIRILDI) */
+        /* SAYDAM VE KESKİN ANA PANEL */
         .checker-wrapper {
             background: var(--panel-bg); 
             border: 1px solid var(--panel-border);
-            border-top: 1px solid rgba(0, 229, 255, 0.4);
+            border-top: 1px solid rgba(0, 229, 255, 0.3);
             border-radius: 16px; padding: 40px;
             box-shadow: var(--elite-shadow);
             display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px; 
             transform-style: preserve-3d; transition: transform 0.1s ease-out;
             position: relative; overflow: hidden;
+            /* Bulanıklık tamamen kaldırıldı, arkadaki yıldızlar net gözükecek */
         }
 
         /* HEADER & LOGO */
@@ -75,12 +73,12 @@
         .logo span.checker-text { color: var(--neon-cyan); text-shadow: 0 0 20px rgba(0, 229, 255, 0.8); }
         
         .header-right { display: flex; align-items: center; gap: 15px; }
-        .ping-indicator { font-family: 'Fira Code', monospace; font-size: 11px; font-weight: 600; color: var(--neon-cyan); display: flex; align-items: center; gap: 6px; background: #03060a; padding: 6px 14px; border-radius: 8px; border: 1px solid rgba(0,229,255,0.2); }
+        .ping-indicator { font-family: 'Fira Code', monospace; font-size: 11px; font-weight: 600; color: var(--neon-cyan); display: flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.6); padding: 6px 14px; border-radius: 8px; border: 1px solid rgba(0,229,255,0.2); }
         .ping-dot { width: 6px; height: 6px; background: var(--neon-cyan); border-radius: 50%; box-shadow: 0 0 10px var(--neon-cyan); animation: blink 1.5s infinite; }
 
         @keyframes pulseGlow { 0% { box-shadow: 0 0 0px rgba(0,229,255,0); } 50% { box-shadow: 0 0 25px rgba(0,229,255,0.4); } 100% { box-shadow: 0 0 0px rgba(0,229,255,0); } }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        .status-badge { background: #03060a; color: white; padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; border: 1px solid rgba(255,255,255,0.1); text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; white-space: nowrap; flex-shrink: 0; display: flex; align-items: center; gap: 8px;}
+        .status-badge { background: rgba(0,0,0,0.6); color: white; padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; border: 1px solid rgba(255,255,255,0.1); text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; white-space: nowrap; flex-shrink: 0; display: flex; align-items: center; gap: 8px;}
         .status-badge.scanning { animation: pulseGlow 1.5s infinite; color: #fff; background: rgba(0, 229, 255, 0.1); border-color: var(--neon-cyan); }
 
         /* SOL PANEL */
@@ -96,21 +94,21 @@
         .btn-text:hover { color: white; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
         .btn-text.green:hover { color: var(--neon-green); text-shadow: 0 0 10px rgba(0,255,136,0.5); }
         
-        /* KESKİN TEXTAREA */
-        textarea { width: 100%; height: 260px; background: #020408; border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; color: #e2e8f0; font-family: 'Fira Code', monospace; font-size: 13px; resize: none; outline: none; transition: all 0.2s ease; line-height: 1.6; box-shadow: inset 0 2px 10px rgba(0,0,0,0.8); }
-        textarea:focus { border-color: var(--neon-cyan); box-shadow: inset 0 2px 10px rgba(0,0,0,0.8), 0 0 15px rgba(0, 229, 255, 0.2); }
+        /* İÇ KUTULAR (Daha saydam) */
+        textarea { width: 100%; height: 260px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; color: #e2e8f0; font-family: 'Fira Code', monospace; font-size: 13px; resize: none; outline: none; transition: all 0.2s ease; line-height: 1.6; }
+        textarea:focus { border-color: var(--neon-cyan); box-shadow: 0 0 15px rgba(0, 229, 255, 0.2); }
         textarea::-webkit-scrollbar { width: 6px; } textarea::-webkit-scrollbar-thumb { background: rgba(0, 229, 255, 0.3); border-radius: 10px; }
-        textarea.success-mode { border-color: var(--neon-green); box-shadow: 0 0 20px rgba(0, 255, 136, 0.15); color: var(--neon-green); background: rgba(0, 255, 136, 0.02); }
+        textarea.success-mode { border-color: var(--neon-green); box-shadow: 0 0 20px rgba(0, 255, 136, 0.15); color: var(--neon-green); background: rgba(0, 255, 136, 0.05); }
 
-        /* HIZ KONTROLÜ - KESKİN TASARIM */
-        .speed-control { display: flex; align-items: center; gap: 15px; background: #020408; padding: 12px 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        /* HIZ KONTROLÜ */
+        .speed-control { display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.5); padding: 12px 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
         .speed-control label { font-size: 12px; color: #94a3b8; font-weight: 600; font-family: 'Outfit', sans-serif; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
         .speed-control label span { color: white; font-weight: 800; font-size: 15px; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
         .speed-control input[type=range] { flex: 1; -webkit-appearance: none; background: #1e293b; height: 4px; border-radius: 5px; outline: none; }
         .speed-control input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--neon-cyan); cursor: pointer; box-shadow: 0 0 15px var(--neon-cyan); transition: 0.2s; }
         .speed-control input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.3); }
 
-        /* KESKİN PROGRESS BAR */
+        /* PROGRESS BAR */
         .progress-container { width: 100%; height: 4px; background: #0f172a; border-radius: 10px; overflow: hidden; }
         .progress-bar { height: 100%; width: 0%; background: var(--neon-cyan); box-shadow: 0 0 15px var(--neon-cyan); transition: width 0.2s ease; position: relative; }
         .progress-bar::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); animation: progressShine 1s infinite; }
@@ -124,14 +122,14 @@
         .btn-start:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(0, 229, 255, 0.6); background: white; }
         .btn-start:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(100%); transform: none; box-shadow: none; background: #334155; color: #94a3b8; }
         
-        .btn-stop { background: transparent; border: 1px solid var(--neon-red); color: var(--neon-red); }
+        .btn-stop { background: rgba(0,0,0,0.5); border: 1px solid var(--neon-red); color: var(--neon-red); }
         .btn-stop:hover { background: var(--neon-red); color: white; box-shadow: 0 0 25px rgba(255, 42, 95, 0.5); transform: translateY(-2px); }
         .btn-stop:disabled { opacity: 0.3; cursor: not-allowed; border-color: rgba(255,255,255,0.1); color: #64748b; background: transparent; transform: none; box-shadow: none; }
 
         /* SAĞ PANEL KARTLARI */
         .right-panel { display: flex; flex-direction: column; gap: 15px; transform: translateZ(20px); }
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .stat-card { background: #020408; border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
+        .stat-card { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
         
         .stat-card.hit-card:hover { border-color: var(--neon-green); box-shadow: 0 5px 25px rgba(0, 255, 170, 0.1); transform: translateY(-3px); }
         .stat-card.bad-card:hover { border-color: var(--neon-red); box-shadow: 0 5px 25px rgba(255, 42, 95, 0.1); transform: translateY(-3px); }
@@ -144,8 +142,8 @@
         .val-total { color: white; text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);} 
         .val-cpm { color: var(--neon-cyan); text-shadow: 0 0 20px rgba(0, 229, 255, 0.5);}
 
-        /* KESKİN IP BAN KUTUSU */
-        .ip-ban-box { display: flex; gap: 8px; height: 45px; align-items: center; background: #020408; padding: 5px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
+        /* IP BAN KUTUSU */
+        .ip-ban-box { display: flex; gap: 8px; height: 45px; align-items: center; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
         .ip-ban-box input { flex: 1; height: 100%; background: transparent; border: none; padding: 0 15px; color: white; font-family: 'Fira Code', monospace; font-size: 12px; outline: none; }
         .ip-ban-box input::placeholder { color: #475569; }
         .ip-btn-ban { height: 100%; padding: 0 16px; background: transparent; border: 1px solid var(--neon-red); color: var(--neon-red); border-radius: 8px; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
@@ -154,7 +152,7 @@
         .ip-btn-unban:hover { background: var(--neon-green); color: black; box-shadow: 0 0 15px rgba(0, 255, 170, 0.5); }
 
         /* KONSOL */
-        .console-container { display: flex; flex-direction: column; background: #020408; border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; }
+        .console-container { display: flex; flex-direction: column; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; }
         .console-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.02); background: rgba(255,255,255,0.01); }
         .console-title { font-size: 11px; color: #94a3b8; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
         .console-filters { display: flex; gap: 8px; }
@@ -164,7 +162,10 @@
         
         .console-logs { height: 110px; padding: 15px; overflow-y: auto; font-family: 'Fira Code', monospace; font-size: 12px; display: flex; flex-direction: column; gap: 6px; }
         .console-logs::-webkit-scrollbar { width: 4px; } .console-logs::-webkit-scrollbar-thumb { background: rgba(0, 229, 255, 0.3); border-radius: 10px; }
-        .log { padding: 4px 10px; border-radius: 4px; display: flex; gap: 12px; animation: fadeIn 0.1s ease forwards; line-height: 1.5; word-break: break-all; border-left: 2px solid transparent; }
+        
+        /* KELİME KAYMA/BOZULMA HATASI ÇÖZÜMÜ */
+        .log { padding: 4px 10px; border-radius: 4px; display: flex; gap: 12px; animation: fadeIn 0.1s ease forwards; line-height: 1.5; word-wrap: break-word; word-break: normal; border-left: 2px solid transparent; }
+        
         .log-time { color: #475569; min-width: 75px; user-select: none; }
         .log.hit { background: rgba(0, 255, 170, 0.05); border-left-color: var(--neon-green); color: var(--neon-green); }
         .log.bad { color: var(--neon-red); background: rgba(255, 42, 95, 0.05); border-left-color: var(--neon-red); }
@@ -173,16 +174,20 @@
         .console-logs.filter-hits .log:not(.hit):not(.info) { display: none !important; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateX(-5px); } to { opacity: 1; transform: translateX(0); } }
-        .btn-back { position: absolute; top: 30px; left: 40px; color: #94a3b8; text-decoration: none; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; transition: 0.2s; z-index: 10; font-family: 'Outfit', sans-serif; background: #020408; padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
+        .btn-back { position: absolute; top: 30px; left: 40px; color: #94a3b8; text-decoration: none; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; transition: 0.2s; z-index: 10; font-family: 'Outfit', sans-serif; background: rgba(0,0,0,0.5); padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
         .btn-back:hover { color: white; border-color: var(--neon-cyan); box-shadow: 0 0 15px rgba(0, 229, 255, 0.2); transform: translateX(-5px); }
     </style>
 </head>
 <body>
 
 <!-- KUZEY IŞIKLARI (AURORA) -->
-<div class="aurora-container"><div class="aurora"></div></div>
+<div class="aurora-container">
+    <div class="aurora-1"></div>
+    <div class="aurora-2"></div>
+    <div class="aurora-3"></div>
+</div>
 
-<!-- PARLAYAN & KAYAN YILDIZLAR CANVAS -->
+<!-- EFSANEVİ YILDIZLAR VE METEORLAR CANVAS -->
 <canvas id="starCanvas"></canvas>
 
 <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i> HEARO Ana Ekran</a>
@@ -254,7 +259,8 @@
                     </div>
                 </div>
                 <div class="console-logs" id="consoleLog">
-                    <div class="log info"><span class="log-time">[SİSTEM]</span><span>HEARO Elite Engine aktif. Veri girişi bekleniyor...</span></div>
+                    <!-- YAZI GÜNCELLENDİ -->
+                    <div class="log info"><span class="log-time">[SİSTEM]</span><span>HEARO Checker aktif. Veri girişi bekleniyor...</span></div>
                 </div>
             </div>
         </div>
@@ -264,31 +270,35 @@
 <script>
     const backendUrl = "https://billowing-smoke-cb6b.hearo.workers.dev";
     
-    // YENİ: PARLAYAN VE KAYAN YILDIZLAR (CANVAS)
+    // YENİ: PARLAYAN YILDIZLAR VE MUHTEŞEM METEOR EFEKTİ
     const canvas = document.getElementById('starCanvas');
     const ctx = canvas.getContext('2d');
     let w = canvas.width = window.innerWidth;
     let h = canvas.height = window.innerHeight;
     
+    // Arkaplan Yıldızları
     const stars = [];
-    for(let i=0; i<200; i++) {
+    for(let i=0; i<250; i++) {
         stars.push({
             x: Math.random() * w, y: Math.random() * h,
             r: Math.random() * 1.5,
             a: Math.random(),
-            s: Math.random() * 0.05 + 0.01 // Twinkle speed
+            s: Math.random() * 0.03 + 0.01 // Nefes alma hızı
         });
     }
 
+    // Kayan Yıldız (Meteor) Mantığı
     const shootingStars = [];
     function spawnShootingStar() {
-        if(Math.random() < 0.03) { // 3% ihtimalle kayan yıldız oluşur
+        if(Math.random() < 0.04) { // %4 ihtimalle çıkar
             shootingStars.push({
-                x: Math.random() * w, y: 0,
-                len: Math.random() * 80 + 20,
-                speed: Math.random() * 15 + 10,
-                angle: Math.PI / 4,
-                opacity: 1
+                x: Math.random() * w * 1.5, 
+                y: Math.random() * h * 0.5 - 200, 
+                len: Math.random() * 100 + 50, // Uzun kuyruk
+                speed: Math.random() * 20 + 15, // Çok Hızlı
+                angle: Math.PI / 4 + (Math.random() * 0.1 - 0.05), // Çapraz açılar
+                opacity: 1,
+                thickness: Math.random() * 2 + 1
             });
         }
     }
@@ -296,7 +306,7 @@
     function drawStars() {
         ctx.clearRect(0, 0, w, h);
         
-        // Normal Yıldızlar
+        // Parlayan Yıldızları Çiz
         stars.forEach(star => {
             star.a += star.s;
             if(star.a > 1 || star.a < 0.1) star.s = -star.s;
@@ -306,24 +316,35 @@
             ctx.fill();
         });
 
-        // Kayan Yıldızlar
+        // Meteorları (Kayan Yıldızları) Çiz
         spawnShootingStar();
         for(let i = shootingStars.length - 1; i >= 0; i--) {
             const ss = shootingStars[i];
+            const tailX = ss.x - Math.cos(ss.angle) * ss.len;
+            const tailY = ss.y - Math.sin(ss.angle) * ss.len;
+            
+            // Parlayan Kuyruk Efekti
+            const grad = ctx.createLinearGradient(ss.x, ss.y, tailX, tailY);
+            grad.addColorStop(0, `rgba(255, 255, 255, ${ss.opacity})`);
+            grad.addColorStop(0.1, `rgba(0, 229, 255, ${ss.opacity * 0.8})`);
+            grad.addColorStop(1, `rgba(0, 0, 0, 0)`);
+
             ctx.beginPath();
             ctx.moveTo(ss.x, ss.y);
-            ctx.lineTo(ss.x - Math.cos(ss.angle) * ss.len, ss.y - Math.sin(ss.angle) * ss.len);
-            ctx.strokeStyle = `rgba(255, 255, 255, ${ss.opacity})`;
-            ctx.lineWidth = 1.5;
+            ctx.lineTo(tailX, tailY);
+            ctx.strokeStyle = grad;
+            ctx.lineWidth = ss.thickness;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#00e5ff';
             ctx.stroke();
+            ctx.shadowBlur = 0; 
             
             ss.x += Math.cos(ss.angle) * ss.speed;
             ss.y += Math.sin(ss.angle) * ss.speed;
-            ss.opacity -= 0.02;
+            ss.opacity -= 0.015;
             
             if(ss.opacity <= 0 || ss.x > w || ss.y > h) shootingStars.splice(i, 1);
         }
-        
         requestAnimationFrame(drawStars);
     }
     drawStars();
@@ -338,7 +359,7 @@
         if(lines > 0) counter.classList.add('active'); else counter.classList.remove('active');
     }
 
-    // Arayüz Hareket Efekti
+    // Arayüz Hareket Efekti (Tilt)
     const tiltWrapper = document.getElementById('tiltWrapper');
     document.addEventListener('mousemove', (e) => {
         const xAxis = ((window.innerWidth / 2) - e.pageX) / 180;
@@ -383,7 +404,7 @@
         const blob = new Blob([hitList.join('\n')], { type: 'text/plain' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url; a.download = `HEARO_ELITE_HITS_${hits}.txt`; a.click();
+        a.href = url; a.download = `HEARO_HITS_${hits}.txt`; a.click();
         window.URL.revokeObjectURL(url);
         addLog('info', 'Sonuçlar bilgisayarınıza indirildi.');
     }
@@ -499,3 +520,4 @@
 </script>
 </body>
 </html>
+```[cite: 3]
