@@ -3,27 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEARO ADMIN | Ultra Premium Checker</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <title>HEARO ADMIN | Ultimate Elite Checker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800;900&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            /* SHARP ELITE RENKLERİ */
+            /* ELITE SİBER RENKLER */
             --neon-cyan: #00e5ff; 
-            --neon-green: #00ffaa; 
             --neon-red: #ff2a5f; 
-            /* Panel saydamlaştırıldı, bulanıklık (blur) yok */
-            --panel-bg: rgba(0, 0, 0, 0.45); 
-            --panel-border: rgba(0, 229, 255, 0.15);
-            --elite-shadow: 0 40px 80px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(0, 229, 255, 0.3);
+            --neon-green: #00ffaa;
+            
+            /* Saydam Paneller */
+            --panel-bg: rgba(3, 5, 8, 0.6); 
+            --panel-border: rgba(0, 229, 255, 0.12);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* SİMSİYAH DERİN UZAY ARKAPLANI */
+        /* SİMSİYAH DERİN UZAY ARKAPLANI (Mavilik Azaltıldı) */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #000000;
+            background-color: #010204;
             color: white;
             height: 100vh;
             display: flex;
@@ -32,165 +32,182 @@
             overflow: hidden; 
         }
 
-        /* GERÇEKÇİ KUZEY IŞIKLARI (AURORA) */
-        .aurora-container {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            overflow: hidden; z-index: -3; pointer-events: none;
-            background: #000000;
-        }
-        .aurora-1 { position: absolute; top: -10%; left: -20%; width: 60vw; height: 40vh; background: rgba(0, 255, 170, 0.12); filter: blur(120px); animation: auroraX 20s infinite alternate linear; }
-        .aurora-2 { position: absolute; top: 10%; right: -20%; width: 50vw; height: 50vh; background: rgba(0, 229, 255, 0.12); filter: blur(150px); animation: auroraY 25s infinite alternate linear; }
-        .aurora-3 { position: absolute; bottom: -20%; left: 20%; width: 70vw; height: 40vh; background: rgba(0, 102, 255, 0.08); filter: blur(100px); animation: auroraX 30s infinite alternate-reverse linear; }
-        
-        @keyframes auroraX { 0% { transform: translateX(0); } 100% { transform: translateX(20vw); } }
-        @keyframes auroraY { 0% { transform: translateY(0); } 100% { transform: translateY(20vh); } }
+        /* UZAKTAKİ HAFİF YANSIMALAR (Gerçekçilik için kısıldı) */
+        .nebula-glow { position: absolute; filter: blur(150px); opacity: 0.05; z-index: -3; pointer-events: none; border-radius: 50%; }
+        .nebula-1 { top: -20%; left: -10%; width: 700px; height: 700px; background: #00e5ff; }
+        .nebula-2 { bottom: -20%; right: -10%; width: 700px; height: 700px; background: #0088ff; }
 
         /* YILDIZLAR VE METEORLAR İÇİN CANVAS */
         #starCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -2; }
 
         /* GİRİŞ ANİMASYONU */
-        @keyframes smoothEnter { 0% { opacity: 0; transform: translateY(30px) scale(0.98); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
-        .tilt-container { width: 95%; max-width: 1300px; animation: smoothEnter 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; perspective: 1200px; z-index: 10;}
+        @keyframes smoothEnter { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+        .tilt-container { width: 95%; max-width: 1300px; animation: smoothEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; perspective: 1200px; z-index: 10;}
         
-        /* SAYDAM VE KESKİN ANA PANEL */
+        /* ANA SAYDAM PANEL */
         .checker-wrapper {
             background: var(--panel-bg); 
             border: 1px solid var(--panel-border);
-            border-top: 1px solid rgba(0, 229, 255, 0.3);
+            border-top: 1px solid rgba(0, 229, 255, 0.25);
             border-radius: 16px; padding: 40px;
-            box-shadow: var(--elite-shadow);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.95), inset 0 1px 0 rgba(0,229,255,0.15);
             display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px; 
-            transform-style: preserve-3d; transition: transform 0.1s ease-out;
-            position: relative; overflow: hidden;
-            /* Bulanıklık tamamen kaldırıldı, arkadaki yıldızlar net gözükecek */
+            position: relative;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         /* HEADER & LOGO */
-        .header { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px; height: 70px; transform: translateZ(30px); }
-        .logo { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; letter-spacing: 1px; display: flex; align-items: center; gap: 12px; white-space: nowrap; flex-shrink: 0; }
-        .logo svg { width: 32px; height: 32px; flex-shrink: 0; filter: drop-shadow(0 0 12px rgba(0,229,255,0.8)); }
+        .header { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 20px; height: 70px; }
+        .logo { font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 800; letter-spacing: 1px; display: flex; align-items: center; gap: 12px; white-space: nowrap; flex-shrink: 0; }
+        .logo svg { width: 30px; height: 30px; flex-shrink: 0; filter: drop-shadow(0 0 10px rgba(0,229,255,0.6)); }
         .logo span.hearo-text { color: white; }
-        .logo span.checker-text { color: var(--neon-cyan); text-shadow: 0 0 20px rgba(0, 229, 255, 0.8); }
+        .logo span.checker-text { color: var(--neon-cyan); text-shadow: 0 0 15px rgba(0, 229, 255, 0.5); }
         
-        .header-right { display: flex; align-items: center; gap: 15px; }
-        .ping-indicator { font-family: 'Fira Code', monospace; font-size: 11px; font-weight: 600; color: var(--neon-cyan); display: flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.6); padding: 6px 14px; border-radius: 8px; border: 1px solid rgba(0,229,255,0.2); }
-        .ping-dot { width: 6px; height: 6px; background: var(--neon-cyan); border-radius: 50%; box-shadow: 0 0 10px var(--neon-cyan); animation: blink 1.5s infinite; }
+        /* EŞİT BOYUTTA, KUSURSUZ HİZALANMIŞ KUTULAR */
+        .header-right { display: flex; align-items: center; gap: 12px; height: 38px; }
+        .header-badge { 
+            height: 100%;
+            display: flex; align-items: center; justify-content: center; gap: 8px; 
+            background: rgba(0,0,0,0.5); border: 1px solid rgba(0,229,255,0.2); 
+            padding: 0 16px; border-radius: 8px; 
+            font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 700; color: var(--neon-cyan); 
+            text-transform: uppercase; letter-spacing: 1px; 
+            white-space: nowrap; /* Yazı kaymasını engeller */
+            box-shadow: inset 0 0 10px rgba(0,229,255,0.03);
+            transition: 0.3s;
+        }
+        .ping-dot { width: 6px; height: 6px; background: var(--neon-cyan); border-radius: 50%; box-shadow: 0 0 8px var(--neon-cyan); animation: blink 1.5s infinite; }
 
-        @keyframes pulseGlow { 0% { box-shadow: 0 0 0px rgba(0,229,255,0); } 50% { box-shadow: 0 0 25px rgba(0,229,255,0.4); } 100% { box-shadow: 0 0 0px rgba(0,229,255,0); } }
+        @keyframes pulseGlow { 0% { box-shadow: inset 0 0 10px rgba(0,229,255,0.05), 0 0 0px rgba(0,229,255,0); } 50% { box-shadow: inset 0 0 15px rgba(0,229,255,0.15), 0 0 15px rgba(0,229,255,0.2); } 100% { box-shadow: inset 0 0 10px rgba(0,229,255,0.05), 0 0 0px rgba(0,229,255,0); } }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        .status-badge { background: rgba(0,0,0,0.6); color: white; padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; border: 1px solid rgba(255,255,255,0.1); text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; white-space: nowrap; flex-shrink: 0; display: flex; align-items: center; gap: 8px;}
-        .status-badge.scanning { animation: pulseGlow 1.5s infinite; color: #fff; background: rgba(0, 229, 255, 0.1); border-color: var(--neon-cyan); }
+        .header-badge.scanning { animation: pulseGlow 1.5s infinite; border-color: var(--neon-cyan); color: white; background: rgba(0,229,255,0.1);}
 
         /* SOL PANEL */
-        .input-area { display: flex; flex-direction: column; gap: 15px; transform: translateZ(20px); }
+        .input-area { display: flex; flex-direction: column; gap: 15px; }
         .top-actions { display: flex; justify-content: space-between; align-items: flex-end; height: 25px; }
         
-        .live-counter { font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; color: #64748b; display: flex; align-items: center; gap: 6px; transition: 0.3s;}
-        .live-counter.active { color: white; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+        .live-counter { font-family: 'Fira Code', monospace; font-size: 11px; font-weight: 600; color: #64748b; display: flex; align-items: center; gap: 6px; transition: 0.3s;}
+        .live-counter.active { color: var(--neon-cyan); text-shadow: 0 0 10px rgba(0,229,255,0.3); }
         
-        .success-label { display: none; color: var(--neon-green); font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 1px; align-items: center; gap: 8px; text-shadow: 0 0 15px rgba(0, 255, 136, 0.6); }
-        .action-btns { display: flex; gap: 15px; margin-left: auto; }
-        .btn-text { background: none; border: none; color: #64748b; font-family: 'Inter'; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
-        .btn-text:hover { color: white; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
-        .btn-text.green:hover { color: var(--neon-green); text-shadow: 0 0 10px rgba(0,255,136,0.5); }
+        /* SABİT BUTONLAR (İNDİR/KOPYALA/TEMİZLE) */
+        .action-btns { display: flex; gap: 18px; margin-left: auto; align-items: center;}
+        .btn-text { background: none; border: none; color: #64748b; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
+        .btn-text:hover { color: var(--neon-cyan); }
+        .btn-text i { font-size: 14px; }
         
-        /* İÇ KUTULAR (Daha saydam) */
-        textarea { width: 100%; height: 260px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; color: #e2e8f0; font-family: 'Fira Code', monospace; font-size: 13px; resize: none; outline: none; transition: all 0.2s ease; line-height: 1.6; }
-        textarea:focus { border-color: var(--neon-cyan); box-shadow: 0 0 15px rgba(0, 229, 255, 0.2); }
-        textarea::-webkit-scrollbar { width: 6px; } textarea::-webkit-scrollbar-thumb { background: rgba(0, 229, 255, 0.3); border-radius: 10px; }
-        textarea.success-mode { border-color: var(--neon-green); box-shadow: 0 0 20px rgba(0, 255, 136, 0.15); color: var(--neon-green); background: rgba(0, 255, 136, 0.05); }
+        textarea { width: 100%; height: 260px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.03); border-radius: 12px; padding: 20px; color: #e2e8f0; font-family: 'Fira Code', monospace; font-size: 13px; resize: none; outline: none; transition: all 0.2s ease; line-height: 1.6; box-shadow: inset 0 2px 15px rgba(0,0,0,0.8); }
+        textarea:focus { border-color: var(--neon-cyan); box-shadow: inset 0 2px 15px rgba(0,0,0,0.8), 0 0 15px rgba(0, 229, 255, 0.1); }
+        textarea::-webkit-scrollbar { width: 6px; } textarea::-webkit-scrollbar-thumb { background: rgba(0, 229, 255, 0.2); border-radius: 10px; }
+        textarea.success-mode { border-color: var(--neon-cyan); box-shadow: inset 0 2px 15px rgba(0,0,0,0.8), 0 0 20px rgba(0, 229, 255, 0.15); color: var(--neon-cyan); background: rgba(0, 229, 255, 0.02); }
 
         /* HIZ KONTROLÜ */
-        .speed-control { display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.5); padding: 12px 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
-        .speed-control label { font-size: 12px; color: #94a3b8; font-weight: 600; font-family: 'Outfit', sans-serif; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
-        .speed-control label span { color: white; font-weight: 800; font-size: 15px; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
-        .speed-control input[type=range] { flex: 1; -webkit-appearance: none; background: #1e293b; height: 4px; border-radius: 5px; outline: none; }
+        .speed-control { display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.5); padding: 12px 18px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.02); }
+        .speed-control label { font-size: 11px; color: #94a3b8; font-weight: 700; font-family: 'Outfit', sans-serif; white-space: nowrap; display: flex; align-items: center; gap: 6px; text-transform: uppercase;}
+        .speed-control label span { color: white; font-weight: 800; font-size: 14px; }
+        .speed-control input[type=range] { flex: 1; -webkit-appearance: none; background: #0f172a; height: 4px; border-radius: 5px; outline: none; }
         .speed-control input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--neon-cyan); cursor: pointer; box-shadow: 0 0 15px var(--neon-cyan); transition: 0.2s; }
         .speed-control input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.3); }
 
         /* PROGRESS BAR */
-        .progress-container { width: 100%; height: 4px; background: #0f172a; border-radius: 10px; overflow: hidden; }
+        .progress-container { width: 100%; height: 2px; background: #0f172a; border-radius: 10px; overflow: hidden; margin-top: 2px;}
         .progress-bar { height: 100%; width: 0%; background: var(--neon-cyan); box-shadow: 0 0 15px var(--neon-cyan); transition: width 0.2s ease; position: relative; }
-        .progress-bar::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); animation: progressShine 1s infinite; }
-        @keyframes progressShine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 
-        /* BUTONLAR */
+        /* SOLID NEON BUTONLAR */
         .controls { display: flex; gap: 15px; height: 50px; }
-        .main-btn { flex: 1; border: none; border-radius: 12px; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s ease; display: flex; justify-content: center; align-items: center; gap: 10px; height: 100%; text-transform: uppercase; letter-spacing: 1px; }
+        .main-btn { flex: 1; border: none; border-radius: 8px; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 800; cursor: pointer; transition: 0.2s ease; display: flex; justify-content: center; align-items: center; gap: 10px; height: 100%; text-transform: uppercase; letter-spacing: 1px; }
         
-        .btn-start { background: var(--neon-cyan); color: #02040a; box-shadow: 0 0 20px rgba(0, 229, 255, 0.3); }
-        .btn-start:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(0, 229, 255, 0.6); background: white; }
-        .btn-start:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(100%); transform: none; box-shadow: none; background: #334155; color: #94a3b8; }
+        .btn-start { background: var(--neon-cyan); color: #000; box-shadow: 0 0 25px rgba(0, 229, 255, 0.3); }
+        .btn-start:hover { box-shadow: 0 0 35px rgba(0, 229, 255, 0.5); transform: scale(1.02); }
+        .btn-start:disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(100%); transform: none; box-shadow: none; }
         
-        .btn-stop { background: rgba(0,0,0,0.5); border: 1px solid var(--neon-red); color: var(--neon-red); }
-        .btn-stop:hover { background: var(--neon-red); color: white; box-shadow: 0 0 25px rgba(255, 42, 95, 0.5); transform: translateY(-2px); }
-        .btn-stop:disabled { opacity: 0.3; cursor: not-allowed; border-color: rgba(255,255,255,0.1); color: #64748b; background: transparent; transform: none; box-shadow: none; }
+        .btn-stop { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.05); color: #64748b; }
+        .btn-stop:hover:not(:disabled) { background: rgba(255, 42, 95, 0.1); color: var(--neon-red); border-color: var(--neon-red); }
+        .btn-stop:disabled { opacity: 0.5; cursor: not-allowed; }
 
         /* SAĞ PANEL KARTLARI */
-        .right-panel { display: flex; flex-direction: column; gap: 15px; transform: translateZ(20px); }
+        .right-panel { display: flex; flex-direction: column; gap: 15px; }
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .stat-card { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
+        .stat-card { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.02); border-radius: 12px; padding: 20px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; position: relative; overflow: hidden; box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);}
         
-        .stat-card.hit-card:hover { border-color: var(--neon-green); box-shadow: 0 5px 25px rgba(0, 255, 170, 0.1); transform: translateY(-3px); }
-        .stat-card.bad-card:hover { border-color: var(--neon-red); box-shadow: 0 5px 25px rgba(255, 42, 95, 0.1); transform: translateY(-3px); }
-        .stat-card.total-card:hover { border-color: var(--neon-cyan); box-shadow: 0 5px 25px rgba(0, 229, 255, 0.1); transform: translateY(-3px); }
+        .stat-card::before { content:''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 0%; height: 2px; background: transparent; transition: 0.3s; }
+        .stat-card.hit-card:hover::before { width: 100%; background: var(--neon-cyan); box-shadow: 0 0 15px var(--neon-cyan); }
+        .stat-card.bad-card:hover::before { width: 100%; background: var(--neon-red); box-shadow: 0 0 15px var(--neon-red); }
+        .stat-card.total-card:hover::before { width: 100%; background: white; box-shadow: 0 0 15px white; }
+        
+        .stat-card:hover { background: rgba(255,255,255,0.02); transform: translateY(-3px); }
         
         .stat-value { font-size: 32px; font-weight: 800; font-family: 'Outfit', sans-serif; line-height: 1; }
-        .stat-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center; }
-        .val-hit { color: var(--neon-green); text-shadow: 0 0 20px rgba(0, 255, 170, 0.5); }
-        .val-bad { color: var(--neon-red); text-shadow: 0 0 20px rgba(255, 42, 95, 0.5); }
-        .val-total { color: white; text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);} 
-        .val-cpm { color: var(--neon-cyan); text-shadow: 0 0 20px rgba(0, 229, 255, 0.5);}
+        .stat-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center; }
+        .val-hit { color: var(--neon-cyan); text-shadow: 0 0 20px rgba(0, 229, 255, 0.4); }
+        .val-bad { color: var(--neon-red); text-shadow: 0 0 20px rgba(255, 42, 95, 0.4); }
+        .val-total { color: white; text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);} 
+        .val-cpm { color: var(--neon-cyan); text-shadow: 0 0 20px rgba(0, 229, 255, 0.4);}
 
         /* IP BAN KUTUSU */
-        .ip-ban-box { display: flex; gap: 8px; height: 45px; align-items: center; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
-        .ip-ban-box input { flex: 1; height: 100%; background: transparent; border: none; padding: 0 15px; color: white; font-family: 'Fira Code', monospace; font-size: 12px; outline: none; }
+        .ip-ban-box { display: flex; gap: 8px; height: 45px; align-items: center; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.02); }
+        .ip-ban-box input { flex: 1; height: 100%; background: transparent; border: none; padding: 0 15px; color: white; font-family: 'Fira Code', monospace; font-size: 11px; outline: none; }
         .ip-ban-box input::placeholder { color: #475569; }
-        .ip-btn-ban { height: 100%; padding: 0 16px; background: transparent; border: 1px solid var(--neon-red); color: var(--neon-red); border-radius: 8px; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
-        .ip-btn-ban:hover { background: var(--neon-red); color: white; box-shadow: 0 0 15px rgba(255, 42, 95, 0.5); }
-        .ip-btn-unban { height: 100%; padding: 0 16px; background: transparent; border: 1px solid var(--neon-green); color: var(--neon-green); border-radius: 8px; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
-        .ip-btn-unban:hover { background: var(--neon-green); color: black; box-shadow: 0 0 15px rgba(0, 255, 170, 0.5); }
+        .ip-btn-ban { height: 100%; padding: 0 16px; background: transparent; border: 1px solid rgba(255,42,95,0.3); color: var(--neon-red); border-radius: 6px; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .ip-btn-ban:hover { background: rgba(255,42,95,0.15); box-shadow: 0 0 10px rgba(255,42,95,0.2); border-color: var(--neon-red);}
+        .ip-btn-unban { height: 100%; padding: 0 16px; background: transparent; border: 1px solid rgba(0,255,170,0.3); color: var(--neon-green); border-radius: 6px; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .ip-btn-unban:hover { background: rgba(0,255,170,0.15); box-shadow: 0 0 10px rgba(0,255,170,0.2); border-color: var(--neon-green);}
 
-        /* KONSOL */
-        .console-container { display: flex; flex-direction: column; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; }
-        .console-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.02); background: rgba(255,255,255,0.01); }
-        .console-title { font-size: 11px; color: #94a3b8; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+        /* KONSOL (SİYAH HACKER TERMINALİ) */
+        .console-container { position: relative; display: flex; flex-direction: column; background: #000000; border: 1px solid rgba(0, 229, 255, 0.15); border-radius: 12px; overflow: hidden; box-shadow: inset 0 0 30px rgba(0,0,0,1); }
+        
+        /* Şeffaf ve Koyu Siyah Matrix Efekti */
+        #matrixCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.15; pointer-events: none; }
+
+        .console-header { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.05); background: #030508; }
+        .console-title { font-size: 11px; color: #cbd5e1; font-family: 'Outfit', sans-serif; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
         .console-filters { display: flex; gap: 8px; }
-        .c-filter { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: #64748b; padding: 4px 12px; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .c-filter { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: #64748b; padding: 4px 12px; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .c-filter:hover { border-color: rgba(255,255,255,0.3); color: white; }
-        .c-filter.active { background: rgba(0, 229, 255, 0.1); border-color: var(--neon-cyan); color: var(--neon-cyan); box-shadow: 0 0 10px rgba(0,229,255,0.2); }
+        .c-filter.active { background: rgba(0, 229, 255, 0.1); border-color: var(--neon-cyan); color: var(--neon-cyan); }
         
-        .console-logs { height: 110px; padding: 15px; overflow-y: auto; font-family: 'Fira Code', monospace; font-size: 12px; display: flex; flex-direction: column; gap: 6px; }
-        .console-logs::-webkit-scrollbar { width: 4px; } .console-logs::-webkit-scrollbar-thumb { background: rgba(0, 229, 255, 0.3); border-radius: 10px; }
+        /* LOG KUTULARI (KUSURSUZ GÖRSEL DİZAYN) */
+        .console-logs { position: relative; z-index: 1; height: 115px; padding: 10px; overflow-y: auto; font-family: 'Fira Code', monospace; font-size: 11px; display: flex; flex-direction: column; gap: 6px; }
+        .console-logs::-webkit-scrollbar { width: 4px; } .console-logs::-webkit-scrollbar-thumb { background: rgba(0, 229, 255, 0.2); border-radius: 10px; }
         
-        /* KELİME KAYMA/BOZULMA HATASI ÇÖZÜMÜ */
-        .log { padding: 4px 10px; border-radius: 4px; display: flex; gap: 12px; animation: fadeIn 0.1s ease forwards; line-height: 1.5; word-wrap: break-word; word-break: normal; border-left: 2px solid transparent; }
+        /* Pürüzsüz Log Animasyonu */
+        @keyframes popIn {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
         
-        .log-time { color: #475569; min-width: 75px; user-select: none; }
+        .log { 
+            padding: 6px 12px; border-radius: 4px; display: flex; gap: 12px; 
+            animation: popIn 0.2s ease-out forwards; 
+            line-height: 1.4; word-wrap: break-word; word-break: normal; white-space: pre-wrap; 
+            background: rgba(255,255,255,0.02); border-left: 2px solid transparent; 
+        }
+        
+        .log-time { color: #64748b; min-width: 70px; user-select: none; font-weight: 500;}
         .log.hit { background: rgba(0, 255, 170, 0.05); border-left-color: var(--neon-green); color: var(--neon-green); }
-        .log.bad { color: var(--neon-red); background: rgba(255, 42, 95, 0.05); border-left-color: var(--neon-red); }
+        .log.bad { background: rgba(255, 42, 95, 0.05); border-left-color: var(--neon-red); color: var(--neon-red); }
         .log.info { background: rgba(0, 229, 255, 0.05); border-left-color: var(--neon-cyan); color: var(--neon-cyan); }
         
         .console-logs.filter-hits .log:not(.hit):not(.info) { display: none !important; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateX(-5px); } to { opacity: 1; transform: translateX(0); } }
-        .btn-back { position: absolute; top: 30px; left: 40px; color: #94a3b8; text-decoration: none; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; transition: 0.2s; z-index: 10; font-family: 'Outfit', sans-serif; background: rgba(0,0,0,0.5); padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
+        /* İMLEÇ */
+        .typing-cursor::after { content: '█'; animation: blinkType 1s step-start infinite; color: var(--neon-cyan); margin-left: 4px; }
+        @keyframes blinkType { 50% { opacity: 0; } }
+
+        .btn-back { position: absolute; top: 30px; left: 40px; color: #64748b; text-decoration: none; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 10px; transition: 0.2s; z-index: 10; font-family: 'Outfit', sans-serif; background: rgba(0,0,0,0.5); padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
         .btn-back:hover { color: white; border-color: var(--neon-cyan); box-shadow: 0 0 15px rgba(0, 229, 255, 0.2); transform: translateX(-5px); }
     </style>
 </head>
 <body>
 
-<!-- KUZEY IŞIKLARI (AURORA) -->
-<div class="aurora-container">
-    <div class="aurora-1"></div>
-    <div class="aurora-2"></div>
-    <div class="aurora-3"></div>
-</div>
+<!-- DERİN UZAY MAVİLİKLERİ (AZALTILMIŞ, SİYAH ODAKLI) -->
+<div class="nebula-glow nebula-1"></div>
+<div class="nebula-glow nebula-2"></div>
 
-<!-- EFSANEVİ YILDIZLAR VE METEORLAR CANVAS -->
+<!-- ULTIMATE YILDIZLAR VE METEORLAR CANVAS -->
 <canvas id="starCanvas"></canvas>
 
-<a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i> HEARO Ana Ekran</a>
+<a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i> SİSTEME DÖN</a>
 
 <div class="tilt-container">
     <div class="checker-wrapper" id="tiltWrapper">
@@ -200,26 +217,33 @@
                     <path d="M21.9999 15L17.9999 21.9282L9.99989 21.9282L13.9999 15L21.9999 15Z" fill="#00e5ff"/>
                     <path d="M14.0001 9.00003L18.0001 2.07183L10.0001 2.07186L6.00015 9.00007L14.0001 9.00003Z" fill="#00e5ff"/>
                 </svg>
-                <span class="hearo-text">HEARO</span> <span class="checker-text">COOKIE CHECKER</span>
+                <span class="hearo-text">HEARO</span> <span class="checker-text">CHECKER</span>
             </div>
+            
+            <!-- EŞİT BOYUTLU KUTULAR -->
             <div class="header-right">
-                <div class="ping-indicator"><div class="ping-dot"></div> AĞ BAĞLANTISI GÜVENLİ</div>
-                <div class="status-badge" id="statusBadge"><i class="fa-solid fa-check"></i> SİSTEM HAZIR</div>
+                <div class="header-badge">
+                    <div class="ping-dot"></div> AĞ BAĞLANTISI GÜVENLİ
+                </div>
+                <div class="header-badge" id="statusBadge">
+                    <i class="fa-solid fa-check"></i> SİSTEM HAZIR
+                </div>
             </div>
         </div>
 
         <div class="input-area">
             <div class="top-actions">
-                <div id="liveCounter" class="live-counter"><i class="fa-solid fa-layer-group"></i> Girdi: <span id="lineCount" style="color: white; margin-left: 2px;">0</span> Satır</div>
-                <div id="successLabel" class="success-label"><i class="fa-solid fa-shield-check"></i> DOĞRULANMIŞ ÇEREZLER</div>
+                <div id="liveCounter" class="live-counter"><i class="fa-solid fa-database"></i> Payload: <span id="lineCount" style="color: white; margin-left: 4px;">0</span> Satır</div>
+                
+                <!-- SABİT BUTONLAR (İNDİR/KOPYALA) -->
                 <div class="action-btns">
-                    <button id="btnDownload" class="btn-text green" onclick="downloadHits()" style="display:none;"><i class="fa-solid fa-download"></i> İndir (.txt)</button>
-                    <button id="btnCopy" class="btn-text green" onclick="copyHits()" style="display:none;"><i class="fa-regular fa-copy"></i> Kopyala</button>
+                    <button id="btnDownload" class="btn-text" onclick="downloadHits()"><i class="fa-solid fa-download"></i> İndir (.txt)</button>
+                    <button id="btnCopy" class="btn-text" onclick="copyHits()"><i class="fa-regular fa-copy"></i> Kopyala</button>
                     <button class="btn-text" onclick="clearInput()"><i class="fa-solid fa-eraser"></i> Temizle</button>
                 </div>
             </div>
             
-            <textarea id="cookieInput" placeholder=">_ Gerçek çerez listesini buraya yapıştırın...&#10;>_ Sistem doğrudan Cloudflare WAF üzerinden güvenli test başlatacaktır." oninput="updateLineCount()"></textarea>
+            <textarea id="cookieInput" placeholder=">_ Hedef çerez (cookie) listesini buraya giriniz...&#10;>_ WAF ve Proxy atlatma algoritmaları devrede." oninput="updateLineCount()"></textarea>
             
             <div class="progress-container">
                 <div class="progress-bar" id="progressBar"></div>
@@ -250,17 +274,19 @@
                 <button class="ip-btn-unban" onclick="manageIP('unban_ip')"><i class="fa-solid fa-unlock"></i> Kaldır</button>
             </div>
 
-            <div class="console-container">
+            <!-- SİYAH HACKER TERMINALİ -->
+            <div class="console-container" id="terminalContainer">
+                <canvas id="matrixCanvas"></canvas>
+                
                 <div class="console-header">
-                    <span class="console-title"><i class="fa-solid fa-terminal"></i> Canlı Terminal</span>
+                    <span class="console-title"><i class="fa-solid fa-terminal"></i> CANLI TERMİNAL</span>
                     <div class="console-filters">
                         <button class="c-filter active" id="f-all" onclick="setFilter('all')">Tümü</button>
                         <button class="c-filter" id="f-hit" onclick="setFilter('hits')">Hits</button>
                     </div>
                 </div>
                 <div class="console-logs" id="consoleLog">
-                    <!-- YAZI GÜNCELLENDİ -->
-                    <div class="log info"><span class="log-time">[SİSTEM]</span><span>HEARO Checker aktif. Veri girişi bekleniyor...</span></div>
+                    <div class="log info" id="typewriterLog"><span class="log-time" id="twTime"></span><span id="twText" class="typing-cursor"></span></div>
                 </div>
             </div>
         </div>
@@ -270,87 +296,126 @@
 <script>
     const backendUrl = "https://billowing-smoke-cb6b.hearo.workers.dev";
     
-    // YENİ: PARLAYAN YILDIZLAR VE MUHTEŞEM METEOR EFEKTİ
-    const canvas = document.getElementById('starCanvas');
-    const ctx = canvas.getContext('2d');
-    let w = canvas.width = window.innerWidth;
-    let h = canvas.height = window.innerHeight;
+    // --- 1. ARKAPLAN İÇİN GÜZELLEŞTİRİLMİŞ YILDIZLAR VE METEORLAR ---
+    const sCanvas = document.getElementById('starCanvas');
+    const sCtx = sCanvas.getContext('2d');
+    let w = sCanvas.width = window.innerWidth;
+    let h = sCanvas.height = window.innerHeight;
     
-    // Arkaplan Yıldızları
     const stars = [];
-    for(let i=0; i<250; i++) {
-        stars.push({
-            x: Math.random() * w, y: Math.random() * h,
-            r: Math.random() * 1.5,
-            a: Math.random(),
-            s: Math.random() * 0.03 + 0.01 // Nefes alma hızı
-        });
+    for(let i=0; i<300; i++) {
+        stars.push({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1.5, a: Math.random(), s: Math.random() * 0.02 + 0.01 });
     }
 
-    // Kayan Yıldız (Meteor) Mantığı
     const shootingStars = [];
     function spawnShootingStar() {
-        if(Math.random() < 0.04) { // %4 ihtimalle çıkar
-            shootingStars.push({
+        if(Math.random() < 0.02) { // Kayan yıldız sıklığı
+            shootingStars.push({ 
                 x: Math.random() * w * 1.5, 
                 y: Math.random() * h * 0.5 - 200, 
-                len: Math.random() * 100 + 50, // Uzun kuyruk
-                speed: Math.random() * 20 + 15, // Çok Hızlı
-                angle: Math.PI / 4 + (Math.random() * 0.1 - 0.05), // Çapraz açılar
-                opacity: 1,
-                thickness: Math.random() * 2 + 1
+                len: Math.random() * 100 + 40, // Daha uzun kuyruk
+                speed: Math.random() * 15 + 10, 
+                angle: Math.PI / 4 + (Math.random() * 0.1 - 0.05), 
+                opacity: 1, 
+                thickness: Math.random() * 1 + 0.5 
             });
         }
     }
 
     function drawStars() {
-        ctx.clearRect(0, 0, w, h);
+        sCtx.clearRect(0, 0, w, h);
         
-        // Parlayan Yıldızları Çiz
         stars.forEach(star => {
             star.a += star.s;
             if(star.a > 1 || star.a < 0.1) star.s = -star.s;
-            ctx.beginPath();
-            ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(star.a)})`;
-            ctx.fill();
+            sCtx.beginPath(); sCtx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+            sCtx.fillStyle = `rgba(255, 255, 255, ${Math.abs(star.a)})`; sCtx.fill();
         });
 
-        // Meteorları (Kayan Yıldızları) Çiz
         spawnShootingStar();
         for(let i = shootingStars.length - 1; i >= 0; i--) {
             const ss = shootingStars[i];
             const tailX = ss.x - Math.cos(ss.angle) * ss.len;
             const tailY = ss.y - Math.sin(ss.angle) * ss.len;
             
-            // Parlayan Kuyruk Efekti
-            const grad = ctx.createLinearGradient(ss.x, ss.y, tailX, tailY);
+            const grad = sCtx.createLinearGradient(ss.x, ss.y, tailX, tailY);
             grad.addColorStop(0, `rgba(255, 255, 255, ${ss.opacity})`);
-            grad.addColorStop(0.1, `rgba(0, 229, 255, ${ss.opacity * 0.8})`);
+            grad.addColorStop(0.1, `rgba(0, 229, 255, ${ss.opacity * 0.8})`); 
             grad.addColorStop(1, `rgba(0, 0, 0, 0)`);
 
-            ctx.beginPath();
-            ctx.moveTo(ss.x, ss.y);
-            ctx.lineTo(tailX, tailY);
-            ctx.strokeStyle = grad;
-            ctx.lineWidth = ss.thickness;
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = '#00e5ff';
-            ctx.stroke();
-            ctx.shadowBlur = 0; 
+            sCtx.beginPath(); sCtx.moveTo(ss.x, ss.y); sCtx.lineTo(tailX, tailY);
+            sCtx.strokeStyle = grad; sCtx.lineWidth = ss.thickness; sCtx.shadowBlur = 10; sCtx.shadowColor = '#00e5ff';
+            sCtx.stroke(); sCtx.shadowBlur = 0; 
             
-            ss.x += Math.cos(ss.angle) * ss.speed;
-            ss.y += Math.sin(ss.angle) * ss.speed;
-            ss.opacity -= 0.015;
-            
+            sCtx.beginPath(); sCtx.arc(ss.x, ss.y, ss.thickness * 1.5, 0, Math.PI*2);
+            sCtx.fillStyle = `rgba(255, 255, 255, ${ss.opacity})`; sCtx.fill();
+
+            ss.x += Math.cos(ss.angle) * ss.speed; ss.y += Math.sin(ss.angle) * ss.speed; ss.opacity -= 0.015;
             if(ss.opacity <= 0 || ss.x > w || ss.y > h) shootingStars.splice(i, 1);
         }
         requestAnimationFrame(drawStars);
     }
     drawStars();
-    window.addEventListener('resize', () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; });
+    window.addEventListener('resize', () => { w = sCanvas.width = window.innerWidth; h = sCanvas.height = window.innerHeight; });
 
-    // Dinamik Satır Sayacı
+    // --- 2. SADECE TERMİNAL İÇİN SİYAH/GRİ MATRIX YAĞMURU ---
+    const mCanvas = document.getElementById('matrixCanvas');
+    const mCtx = mCanvas.getContext('2d');
+    const terminalContainer = document.getElementById('terminalContainer');
+    
+    let mCols = 0;
+    let mDrops = [];
+    const mFontSize = 10;
+    const mChars = '0123456789ABCDEF'.split('');
+
+    function resizeMatrix() {
+        mCanvas.width = terminalContainer.offsetWidth;
+        mCanvas.height = terminalContainer.offsetHeight;
+        mCols = mCanvas.width / mFontSize;
+        mDrops = [];
+        for(let x = 0; x < mCols; x++) mDrops[x] = Math.random() * -50;
+    }
+    resizeMatrix();
+    window.addEventListener('resize', resizeMatrix);
+
+    function drawMatrix() {
+        mCtx.fillStyle = 'rgba(0, 0, 0, 0.2)'; 
+        mCtx.fillRect(0, 0, mCanvas.width, mCanvas.height);
+        
+        mCtx.font = mFontSize + "px 'Fira Code', monospace";
+        
+        for(let i = 0; i < mDrops.length; i++) {
+            const text = mChars[Math.floor(Math.random() * mChars.length)];
+            mCtx.fillStyle = 'rgba(0, 229, 255, 0.3)'; // Çok şeffaf buz mavisi/gri
+            mCtx.fillText(text, i * mFontSize, mDrops[i] * mFontSize);
+            if(mDrops[i] * mFontSize > mCanvas.height && Math.random() > 0.95) mDrops[i] = 0;
+            mDrops[i]++;
+        }
+    }
+    setInterval(drawMatrix, 50);
+
+    // --- 3. DAKTİLO EFEKTİ ---
+    const getTime = () => { const d = new Date(); return `[${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}]`; };
+    
+    window.onload = () => {
+        document.getElementById('twTime').innerText = getTime();
+        const textToType = "HEARO Checker aktif. Veri girişi bekleniyor...";
+        let i = 0;
+        const twElement = document.getElementById('twText');
+        
+        function typeWriter() {
+            if (i < textToType.length) {
+                twElement.innerHTML += textToType.charAt(i);
+                i++;
+                setTimeout(typeWriter, 35);
+            } else {
+                twElement.classList.remove('typing-cursor');
+            }
+        }
+        setTimeout(typeWriter, 600);
+    };
+
+    // --- ARAYÜZ FONKSİYONLARI ---
     function updateLineCount() {
         const raw = document.getElementById('cookieInput').value.trim();
         const lines = raw ? raw.split('\n').filter(line => line.trim() !== '' && !line.trim().startsWith('#')).length : 0;
@@ -359,11 +424,10 @@
         if(lines > 0) counter.classList.add('active'); else counter.classList.remove('active');
     }
 
-    // Arayüz Hareket Efekti (Tilt)
     const tiltWrapper = document.getElementById('tiltWrapper');
     document.addEventListener('mousemove', (e) => {
-        const xAxis = ((window.innerWidth / 2) - e.pageX) / 180;
-        const yAxis = ((window.innerHeight / 2) - e.pageY) / 180;
+        const xAxis = ((window.innerWidth / 2) - e.pageX) / 200;
+        const yAxis = ((window.innerHeight / 2) - e.pageY) / 200;
         tiltWrapper.style.transform = `rotateY(${xAxis}deg) rotateX(${-yAxis}deg)`;
     });
     document.addEventListener('mouseleave', () => tiltWrapper.style.transform = `rotateY(0deg) rotateX(0deg)`);
@@ -373,11 +437,9 @@
     const el = {
         input: document.getElementById('cookieInput'), btnStart: document.getElementById('btnStart'), btnStop: document.getElementById('btnStop'),
         hit: document.getElementById('hitCount'), bad: document.getElementById('badCount'), total: document.getElementById('totalCount'), cpm: document.getElementById('cpmCount'),
-        log: document.getElementById('consoleLog'), badge: document.getElementById('statusBadge'), successLabel: document.getElementById('successLabel'),
+        log: document.getElementById('consoleLog'), badge: document.getElementById('statusBadge'),
         liveCount: document.getElementById('liveCounter'), btnCopy: document.getElementById('btnCopy'), btnDownload: document.getElementById('btnDownload'), progBar: document.getElementById('progressBar')
     };
-
-    const getTime = () => { const d = new Date(); return `[${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}]`; };
 
     function setFilter(type) {
         document.getElementById('f-all').classList.remove('active'); document.getElementById('f-hit').classList.remove('active');
@@ -388,25 +450,23 @@
 
     function clearInput() {
         el.input.value = ''; el.input.classList.remove('success-mode'); updateLineCount();
-        el.successLabel.style.display = 'none'; el.liveCount.style.display = 'flex';
-        el.btnCopy.style.display = 'none'; el.btnDownload.style.display = 'none';
         el.progBar.style.width = '0%';
     }
 
     function copyHits() {
+        if (hits === 0) { addLog('bad', 'Kopyalanacak başarılı çerez bulunamadı.'); return; }
         navigator.clipboard.writeText(hitList.join('\n'));
-        addLog('info', 'Çalışan çerezler panoya kopyalandı.');
         el.btnCopy.innerHTML = '<i class="fa-solid fa-check"></i> Kopyalandı';
         setTimeout(() => el.btnCopy.innerHTML = '<i class="fa-regular fa-copy"></i> Kopyala', 2000);
     }
 
     function downloadHits() {
+        if (hits === 0) { addLog('bad', 'İndirilecek başarılı çerez bulunamadı.'); return; }
         const blob = new Blob([hitList.join('\n')], { type: 'text/plain' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url; a.download = `HEARO_HITS_${hits}.txt`; a.click();
         window.URL.revokeObjectURL(url);
-        addLog('info', 'Sonuçlar bilgisayarınıza indirildi.');
     }
 
     function addLog(type, msg) {
@@ -449,27 +509,26 @@
             if (res.ok) {
                 const data = await res.json();
                 if (data.error === "KV_YOK") addLog('bad', `[SİSTEM HATASI] Cloudflare KV veritabanına ulaşılamıyor.`);
-                else { addLog(actionType === 'ban_ip' ? 'bad' : 'hit', `[GÜVENLİK PROTOKOLÜ] ${ip} ${actionType === 'ban_ip' ? 'sistemden uzaklaştırıldı' : 'tekrar erişime açıldı'}.`); ipInput.value = ''; }
+                else { addLog('info', `[GÜVENLİK DUVARI] ${ip} ${actionType === 'ban_ip' ? 'ağdan engellendi' : 'beyaz listeye alındı'}.`); ipInput.value = ''; }
             } else { addLog('bad', `[HATA] Ağ bağlantısı reddedildi.`); }
         } catch(e) { addLog('bad', `[HATA] Sunucu yanıt vermiyor.`); }
     }
 
     async function startCheck() {
         const raw = el.input.value.trim();
-        if (!raw) { addLog('bad', 'HATA: Veri girişi tespit edilemedi.'); return; }
+        if (!raw) { addLog('bad', 'HATA: İşlenecek veri bulunamadı.'); return; }
         cookies = raw.split('\n').filter(line => line.trim() !== '' && !line.trim().startsWith('#'));
         if (cookies.length === 0) return;
 
         isRunning = true; currentIndex = 0; hits = 0; bads = 0; startTime = Date.now(); hitList = [];
-        el.input.classList.remove('success-mode'); el.successLabel.style.display = 'none'; el.liveCount.style.display = 'none';
-        el.btnCopy.style.display = 'none'; el.btnDownload.style.display = 'none';
+        el.input.classList.remove('success-mode'); 
         el.btnStart.disabled = true; el.btnStop.disabled = false; el.input.disabled = true;
         
         el.badge.classList.add('scanning');
-        el.badge.innerHTML = '<i class="fa-solid fa-radar fa-beat"></i> TARAMA SÜRÜYOR...';
+        el.badge.innerHTML = '<i class="fa-solid fa-radar fa-spin"></i> TARAMA SÜRÜYOR...';
         
         const threads = parseInt(document.getElementById('threadSlider').value) || 10;
-        addLog('info', `Güç: ${threads} Thread aktif. Gerçek zamanlı tarama başlatıldı...`);
+        addLog('info', `Güç: ${threads} Thread aktif. Asenkron tarama başlatıldı...`);
         el.progBar.style.width = '0%';
         
         while (currentIndex < cookies.length && isRunning) {
@@ -480,9 +539,9 @@
                 try {
                     const response = await fetch(backendUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tur: "check_cookie", detay: { cookie: cookie } }) });
                     const data = await response.json();
-                    if (data.valid) { hits++; hitList.push(cookie); addLog('hit', `[ONAYLANDI] ${cookie.substring(0, 20)}...`); } 
-                    else { bads++; addLog('bad', `[REDDEDİLDİ] ${cookie.substring(0, 20)}...`); }
-                } catch (err) { bads++; addLog('bad', `[HATA] İstek zaman aşımına uğradı.`); }
+                    if (data.valid) { hits++; hitList.push(cookie); addLog('hit', `[ÇALIŞIYOR] ${cookie.substring(0, 30)}...`); } 
+                    else { bads++; addLog('bad', `[REDDEDİLDİ] ${cookie.substring(0, 30)}...`); }
+                } catch (err) { bads++; addLog('bad', `[ZAMAN AŞIMI] İstek gönderilemedi.`); }
             });
             
             await Promise.all(promises);
@@ -496,7 +555,7 @@
         isRunning = false; el.btnStart.disabled = false; el.btnStop.disabled = true; el.input.disabled = false;
         el.badge.classList.remove('scanning');
         el.badge.innerHTML = '<i class="fa-solid fa-stop"></i> DURDURULDU';
-        el.badge.style.color = 'var(--neon-red)'; el.badge.style.borderColor = 'rgba(255,42,95,0.3)';
+        el.badge.style.borderColor = 'rgba(255,42,95,0.4)'; el.badge.style.color = 'var(--neon-red)';
         addLog('info', 'Sistem manuel olarak durduruldu.');
     }
 
@@ -504,15 +563,12 @@
         isRunning = false; el.btnStart.disabled = false; el.btnStop.disabled = true; el.input.disabled = false;
         el.badge.classList.remove('scanning');
         el.badge.innerHTML = '<i class="fa-solid fa-check-double"></i> TAMAMLANDI';
-        el.badge.style.color = 'var(--neon-cyan)'; el.badge.style.borderColor = 'rgba(0,229,255,0.3)';
+        el.badge.style.borderColor = 'rgba(0,229,255,0.4)'; el.badge.style.color = 'var(--neon-cyan)';
         addLog('info', `İşlem Bitti. Sonuç: ${hits} Aktif | ${bads} Pasif.`);
 
         if (hits > 0) {
-            el.successLabel.style.display = 'flex'; 
-            el.btnCopy.style.display = 'flex'; 
-            el.btnDownload.style.display = 'flex';
             el.input.value = hitList.join('\n'); el.input.classList.add('success-mode');
-            addLog('hit', '>>> Başarılı çerezler ekrana yansıtıldı.');
+            addLog('hit', '>>> Başarılı çerezler ekrana filtrelendi.');
         } else {
             el.input.value = "Test edilen tüm veriler geçersiz.";
         }
@@ -520,4 +576,3 @@
 </script>
 </body>
 </html>
-```[cite: 3]
