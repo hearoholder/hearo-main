@@ -61,11 +61,11 @@ async function sendSecureNotification(tur, detay = {}) {
 }
 
 // =============================================================
-// 3. ARAYÜZ (UI) İŞLEMLERİ
+// 3. ARAYÜZ (UI) İŞLEMLERİ VE EFEKTLER
 // =============================================================
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- BÖLÜM A: LOGIN (GİRİŞ) SİSTEMİ (Özel Koruma Altında) ---
+    // --- BÖLÜM A: LOGIN (GİRİŞ) SİSTEMİ ---
     try {
         const loginBtn = document.getElementById('nav-login-btn');
         const authModal = document.getElementById('auth-modal');
@@ -77,13 +77,11 @@ document.addEventListener('DOMContentLoaded', () => {
         let isLoggedIn = false;
 
         if (loginBtn && authModal) {
-            // Login Butonuna Tıklama Olayı
             loginBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 if (isLoggedIn) {
                     if (userDropdown) userDropdown.classList.toggle('active');
                 } else {
-                    // Modal'ı zorla görünür yapıyoruz (Olası CSS çakışmalarına karşı)
                     authModal.style.display = 'flex';
                     authModal.style.visibility = 'visible';
                     authModal.style.opacity = '1';
@@ -93,7 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // Modal Kapatma Olayı
             const closeModal = (e) => {
                 if (e) e.preventDefault();
                 authModal.classList.remove('active');
@@ -103,11 +100,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 300);
             };
 
-            // Dışarı tıklayınca veya Back tuşuna basınca kapat
             authModal.addEventListener('click', (e) => { if (e.target === authModal) closeModal(); });
             document.querySelectorAll('.back-to-home').forEach(btn => btn.addEventListener('click', closeModal));
 
-            // Kayıt Ol / Giriş Yap Arası Geçiş
             switchLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -120,7 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
 
-            // Form Gönderme ve Gizli Admin Şifresi
             authForms.forEach(form => {
                 form.addEventListener('submit', (e) => {
                     e.preventDefault();
@@ -151,9 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
         }
-    } catch (e) {
-        console.error("Login Sistemi Hatası:", e);
-    }
+    } catch (e) { console.error("Login Sistemi Hatası:", e); }
 
     // --- BÖLÜM B: İNDİRME VE GÜVENLİK ---
     try {
@@ -187,11 +179,65 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     } catch (e) { console.error("Güvenlik Sistemi Hatası:", e); }
 
-    // --- BÖLÜM C: GÖRSEL EFEKTLER (3D, Glow, Scroll) ---
+    // --- BÖLÜM C: GÖRSEL EFEKTLER (Sonsuz Kayan Afişler, 3D, Glow) ---
     try {
+        // 1. SONSUZ AKAN PARTNER AFİŞLERİ (Infinite Marquee)
+        const posterTrack = document.querySelector('.poster-track');
+        if (posterTrack) {
+            // İçerideki resimleri alıp ikiye katlıyoruz ki sonsuz döngü kesintiye uğramasın
+            const originalPosters = posterTrack.innerHTML;
+            posterTrack.innerHTML = originalPosters + originalPosters;
+            
+            // Afişlerin akıcı kayması ve kenar kararması için gereken CSS kurallarını ekliyoruz
+            const marqueeStyle = document.createElement('style');
+            marqueeStyle.textContent = `
+                .poster-showcase {
+                    overflow: hidden;
+                    width: 100%;
+                    position: relative;
+                    padding: 20px 0;
+                    /* Kenarları yavaşça siyahla eritme efekti */
+                    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+                    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+                }
+                .poster-slider {
+                    display: flex;
+                    width: max-content;
+                }
+                .poster-track {
+                    display: flex;
+                    gap: 20px;
+                    width: max-content;
+                    /* 30 saniyede bir tur dönecek, pürüzsüz ve çizgisel akacak */
+                    animation: scrollMarquee 30s linear infinite;
+                }
+                .poster-track:hover {
+                    animation-play-state: paused; /* Üzerine gelince dursun */
+                }
+                .poster-track img {
+                    height: 250px;
+                    width: auto;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+                    transition: transform 0.3s ease, border 0.3s ease;
+                    cursor: pointer;
+                    flex-shrink: 0;
+                }
+                .poster-track img:hover {
+                    transform: scale(1.05);
+                    border: 2px solid #00f0ff;
+                }
+                @keyframes scrollMarquee {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(calc(-50% - 10px)); } /* Yarıya gelince başa sar (Kesintisiz) */
+                }
+            `;
+            document.head.appendChild(marqueeStyle);
+        }
+
+        // 2. HERO LOGO 3D EFEKTİ
         const hero = document.querySelector('.hero');
         const heroLogo = document.getElementById('hero-logo');
-        
         if (hero && heroLogo) {
             hero.addEventListener('mousemove', (e) => {
                 const rect = hero.getBoundingClientRect();
@@ -204,6 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        // 3. YUKARI KAYDIRINCA NAVBARIN SİYAHLAŞMASI
         const navbar = document.querySelector('.navbar');
         if (navbar) {
             window.addEventListener('scroll', () => {
@@ -217,6 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        // 4. FARE İMLECİ ARKASINDAKİ MAVİ PARLAMA (GLOW)
         const glow = document.createElement('div');
         glow.style.position = 'fixed';
         glow.style.top = '0';
@@ -231,6 +279,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('mousemove', (e) => {
             glow.style.background = `radial-gradient(circle 600px at ${e.clientX}px ${e.clientY}px, rgba(0, 240, 255, 0.05), transparent 40%)`;
         });
-    } catch (e) {}
+    } catch (e) { console.error("Görsel Efekt Hatası:", e); }
 
 });
