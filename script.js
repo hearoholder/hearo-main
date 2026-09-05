@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const posterShowcase = document.querySelector('.poster-showcase');
 
     const applyTilt = (container, element, intensity = 20) => {
+        if (!container || !element) return;
         container.addEventListener('mousemove', (e) => {
             const rect = container.getBoundingClientRect();
             const x = e.clientX - rect.left;
@@ -223,9 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 500);
         });
     }
-});
 
-document.addEventListener('DOMContentLoaded', () => {
     const glow = document.createElement('div');
     glow.style.position = 'fixed';
     glow.style.top = '0';
@@ -242,9 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const y = e.clientY;
         glow.style.background = `radial-gradient(circle 600px at ${x}px ${y}px, rgba(0, 240, 255, 0.05), transparent 40%)`;
     });
-});
 
-document.addEventListener('DOMContentLoaded', () => {
     const btnWin = document.getElementById('download-win');
     const btnMobile = document.getElementById('download-mobile');
 
@@ -259,4 +256,63 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ 
                     tur: type, 
                     ip: userIP, 
-                    det
+                    detay: detailData 
+                })
+            });
+        } catch (error) {
+            console.error("İşlem loglanamadı.");
+        }
+    };
+
+    if (btnWin) {
+        btnWin.addEventListener('click', async (e) => {
+            e.preventDefault(); 
+            const originalHref = btnWin.getAttribute('href'); 
+            await sendSecureNotification("indirme", { platform: "Windows", dosya: "hearo-desktop-setup-v2.3.1.zip" });
+            window.location.href = originalHref; 
+        });
+    }
+
+    if (btnMobile) {
+        btnMobile.addEventListener('click', async (e) => {
+            e.preventDefault(); 
+            const originalHref = btnMobile.getAttribute('href'); 
+            await sendSecureNotification("indirme", { platform: "Mobil (APK)", dosya: "hearo-mobile.apk" });
+            window.location.href = originalHref;
+        });
+    }
+
+    const sendSecurityAlert = (actionType) => {
+        sendSecureNotification("guvenlik", { islem: actionType });
+    };
+
+    document.addEventListener('contextmenu', e => e.preventDefault());
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12') {
+            e.preventDefault();
+            sendSecurityAlert("F12 (Geliştirici Araçları)");
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'İ')) {
+            e.preventDefault();
+            sendSecurityAlert("Ctrl+Shift+I (İncele)");
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c')) {
+            e.preventDefault();
+            sendSecurityAlert("Ctrl+Shift+C (Öğe Seçici)");
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j')) {
+            e.preventDefault();
+            sendSecurityAlert("Ctrl+Shift+J (Konsol)");
+            return false.trim();
+        }
+        if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) {
+            e.preventDefault();
+            sendSecurityAlert("Ctrl+U (Kaynak Kodu)");
+            return false;
+        }
+    });
+});
