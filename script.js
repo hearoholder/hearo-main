@@ -1,16 +1,32 @@
-// ==============================================================
-// 1. CLOUDFLARE WAF & ZİYARETÇİ KONTROLÜ
-// ==============================================================
-async function checkIPAccess() {
-    const backendUrl = "https://billowing-smoke-cb6b.hearo.workers.dev";
+const BACKEND_URL = "https://billowing-smoke-cb6b.hearo.workers.dev";
+const AUTH_TOKEN = "Bearer hearo_gizli_anahtar_2026";
+let userIP = "Bilinmiyor";
+
+async function initSystem() {
     try {
-        const response = await fetch(backendUrl, {
+        const ipRes = await fetch('https://api.ipify.org?format=json');
+        const ipData = await ipRes.json();
+        userIP = ipData.ip;
+    } catch (error) {
+        console.error("IP alınamadı.");
+    }
+
+    try {
+        const response = await fetch(BACKEND_URL, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tur: "ziyaretci" })
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': AUTH_TOKEN
+            },
+            body: JSON.stringify({ 
+                tur: "ziyaretci",
+                ip: userIP
+            })
         });
         
-        if (response.status === 403) {
+        const result = await response.json().catch(() => ({}));
+
+        if (response.status === 403 || result.isBanned) {
             document.body.innerHTML = `
                 <div style="display:flex; flex-direction:column; height:100vh; width:100vw; background:#050505; color:#ff3366; align-items:center; justify-content:center; font-family:sans-serif; text-align:center; position:fixed; top:0; left:0; z-index:999999;">
                     <i class="fa-solid fa-shield-halved" style="font-size: 60px; margin-bottom: 20px;"></i>
@@ -18,20 +34,16 @@ async function checkIPAccess() {
                     <p style="color: #888; font-size: 14px;">Your IP address has been permanently blocked from accessing this server.</p>
                 </div>`;
             document.body.style.overflow = 'hidden';
-            throw new Error("Erişim Engellendi: Cloudflare KV Ban");
+            window.stop(); 
         }
     } catch (error) {
-        // Hata durumunda normal akışı bozma
     }
 }
-checkIPAccess();
 
-// ==============================================================
-// 2. ORİJİNAL HEARO UI SCRIPTLERİ VE GİZLİ GİRİŞİ
-// ==============================================================
+initSystem();
+
 console.log('HEARO UI Loaded.');
 
-// 3D Tilt Effect for Hero Logo AND Poster Showcase
 document.addEventListener('DOMContentLoaded', () => {
     const hero = document.querySelector('.hero');
     const heroLogo = document.getElementById('hero-logo');
@@ -60,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Navbar Scroll Effect
     const navbar = document.querySelector('.navbar');
     if (navbar) {
         window.addEventListener('scroll', () => {
@@ -74,7 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Smooth Scroll for Anchors
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -86,7 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // AUTH MODAL LOGIC & HIDDEN ADMIN CHECKER
     const loginBtn = document.getElementById('nav-login-btn');
     const authModal = document.getElementById('auth-modal');
     const userDropdown = document.getElementById('user-dropdown');
@@ -149,9 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
                 
-                // ==============================================================
-                // 3. GİZLİ CHECKER YÖNLENDİRMESİ (hearo / hearochecker)
-                // ==============================================================
                 if (form.id === 'login-form') {
                     const usernameInput = form.querySelector('input[type="text"], input[type="email"]');
                     const passwordInput = form.querySelector('input[type="password"]');
@@ -239,65 +245,18 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    const backendUrl = "https://billowing-smoke-cb6b.hearo.workers.dev";
     const btnWin = document.getElementById('download-win');
     const btnMobile = document.getElementById('download-mobile');
 
     const sendSecureNotification = async (type, detailData) => {
         try {
-            await fetch(backendUrl, {
+            await fetch(BACKEND_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tur: type, detay: detailData })
-            });
-        } catch (error) {
-            console.error("İşlem loglanamadı.");
-        }
-    };
-
-    if (btnWin) {
-        btnWin.addEventListener('click', async (e) => {
-            e.preventDefault(); 
-            const originalHref = btnWin.getAttribute('href'); 
-            sendSecureNotification("indirme", { platform: "Windows", dosya: "hearo-desktop-setup-v2.3.1.zip" });
-            window.location.href = originalHref; 
-        });
-    }
-
-    if (btnMobile) {
-        btnMobile.addEventListener('click', async (e) => {
-            e.preventDefault(); 
-            const originalHref = btnMobile.getAttribute('href'); 
-            sendSecureNotification("indirme", { platform: "Mobil (APK)", dosya: "hearo-mobile.apk" });
-            window.location.href = originalHref;
-        });
-    }
-
-    const sendSecurityAlert = (actionType) => {
-        sendSecureNotification("guvenlik", { islem: actionType });
-    };
-
-    document.addEventListener('contextmenu', e => e.preventDefault());
-
-    document.onkeydown = function(e) {
-        if(e.keyCode == 123) { 
-            e.preventDefault();
-            sendSecurityAlert("F12 (Geliştirici Araçları)");
-            return false;
-        }
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
-            e.preventDefault();
-            sendSecurityAlert("Ctrl+Shift+I (İncele)");
-            return false;
-        }
-        if(e.ctrlKey && e.shiftKey && (e.keyCode == 'C'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) {
-            e.preventDefault();
-            return false;
-        }
-        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
-            e.preventDefault();
-            sendSecurityAlert("Ctrl+U (Kaynak Kodu)");
-            return false;
-        }
-    };
-});
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': AUTH_TOKEN 
+                },
+                body: JSON.stringify({ 
+                    tur: type, 
+                    ip: userIP, 
+                    det
