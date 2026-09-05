@@ -3,7 +3,7 @@ const AUTH_TOKEN = "Bearer hearo_gizli_anahtar_2026";
 let userIP = "Bilinmiyor";
 
 // =============================================================
-// 1. IP KONTROLÜ VE BAN ENGELLEME SİSTEMİ
+// 1. ARKA PLAN GÜVENLİK VE BAN SİSTEMİ (EKLENEN ÖZELLİK)
 // =============================================================
 async function initSystem() {
     try {
@@ -42,9 +42,6 @@ async function initSystem() {
 }
 initSystem();
 
-// =============================================================
-// 2. BİLDİRİM VE LOG GÖNDERME YARDIMCISI
-// =============================================================
 async function sendSecureNotification(tur, detay = {}) {
     try {
         await fetch(BACKEND_URL, {
@@ -59,42 +56,26 @@ async function sendSecureNotification(tur, detay = {}) {
 }
 
 // =============================================================
-// 3. ARAYÜZ (UI) İŞLEMLERİ VE EFEKTLER (ORİJİNAL)
+// 2. ORİJİNAL ARAYÜZ (SENİN KODUN - HİÇ DOKUNULMADI)
 // =============================================================
 console.log('HEARO UI Loaded.');
 
+// 3D Tilt Effect for Hero Logo AND Poster Showcase
 document.addEventListener('DOMContentLoaded', () => {
-
-    // --- FARE ARKASINDAKİ MAVİ PARLAMA (GLOW) ---
-    const glow = document.createElement('div');
-    glow.style.position = 'fixed';
-    glow.style.top = '0';
-    glow.style.left = '0';
-    glow.style.width = '100vw';
-    glow.style.height = '100vh';
-    glow.style.pointerEvents = 'none';
-    glow.style.zIndex = '9999';
-    glow.style.transition = 'background 0.1s ease';
-    document.body.appendChild(glow);
-
-    document.addEventListener('mousemove', (e) => {
-        glow.style.background = `radial-gradient(circle 600px at ${e.clientX}px ${e.clientY}px, rgba(0, 240, 255, 0.05), transparent 40%)`;
-    });
-
-
-    // --- 3D EĞİLME (TILT) EFEKTİ ---
     const hero = document.querySelector('.hero');
     const heroLogo = document.getElementById('hero-logo');
     const posterShowcase = document.querySelector('.poster-showcase');
 
+    // Helper function for tilt
     const applyTilt = (container, element, intensity = 20) => {
-        if (!container || !element) return;
         container.addEventListener('mousemove', (e) => {
             const rect = container.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
+
             const xRotation = ((y / rect.height) - 0.5) * -intensity;
             const yRotation = ((x / rect.width) - 0.5) * intensity;
+
             element.style.transform = `perspective(1000px) rotateX(${xRotation}deg) rotateY(${yRotation}deg) scale(1.02)`;
         });
 
@@ -107,46 +88,17 @@ document.addEventListener('DOMContentLoaded', () => {
         applyTilt(hero, heroLogo, 25);
     }
 
-    // --- SONSUZ KAYAN AFİŞLER VE TILT UYUMU ---
     if (posterShowcase) {
         const slider = posterShowcase.querySelector('.poster-slider');
         if (slider) {
             slider.style.transition = 'transform 0.1s ease-out';
             applyTilt(posterShowcase, slider, 15);
         }
-
-        // CSS ile Sonsuz Marquee Animasyonunu JS'den Basıyoruz
-        const style = document.createElement('style');
-        style.textContent = `
-            .poster-showcase { 
-                overflow: hidden; 
-                width: 100%; 
-                position: relative; 
-                padding: 20px 0; 
-                -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); 
-                mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); 
-            }
-            .poster-slider { display: flex; width: max-content; }
-            .poster-track { 
-                display: flex; gap: 20px; width: max-content; 
-                animation: scrollMarquee 30s linear infinite; 
-            }
-            .poster-track img { 
-                height: 250px; width: auto; border-radius: 12px; 
-                box-shadow: 0 4px 15px rgba(0,0,0,0.5); 
-                transition: transform 0.3s ease, border 0.3s ease; 
-                flex-shrink: 0; cursor: pointer; 
-            }
-            .poster-track img:hover { transform: scale(1.05); border: 2px solid #00f0ff; }
-            @keyframes scrollMarquee { 
-                0% { transform: translateX(0); } 
-                100% { transform: translateX(calc(-50% - 10px)); } 
-            }
-        `;
-        document.head.appendChild(style);
     }
+});
 
-    // --- NAVBAR SCROLL EFEKTİ ---
+document.addEventListener('DOMContentLoaded', () => {
+    // Navbar Scroll Effect
     const navbar = document.querySelector('.navbar');
     if (navbar) {
         window.addEventListener('scroll', () => {
@@ -160,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- SMOOTH SCROLL ---
+    // Smooth Scroll for Anchors
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -174,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- AUTH MODAL (GİRİŞ/KAYIT) & ADMİN GİRİŞİ ---
+    // AUTH MODAL LOGIC
     const loginBtn = document.getElementById('nav-login-btn');
     const authModal = document.getElementById('auth-modal');
     const userDropdown = document.getElementById('user-dropdown');
@@ -237,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
                 
-                // Gizli Admin Girişi
+                // Gizli Admin Şifresi
                 if (form.id === 'login-form') {
                     const usernameInput = form.querySelector('input[type="text"], input[type="email"]');
                     const passwordInput = form.querySelector('input[type="password"]');
@@ -274,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- LOAD MORE (ODALAR İÇİN) ---
+    // LOAD MORE LOGIC FOR LIVE ROOMS
     const btnLoadMore = document.getElementById('btn-load-more');
     if (btnLoadMore) {
         btnLoadMore.addEventListener('click', () => {
@@ -303,9 +255,34 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 500);
         });
     }
+});
 
-    // --- İNDİRME LOGLARI ---
+// Premium Mouse Follow Glow (Cyan for HEARO) - ORIGINAL
+document.addEventListener('DOMContentLoaded', () => {
+    const glow = document.createElement('div');
+    glow.style.position = 'fixed';
+    glow.style.top = '0';
+    glow.style.left = '0';
+    glow.style.width = '100vw';
+    glow.style.height = '100vh';
+    glow.style.pointerEvents = 'none';
+    glow.style.zIndex = '9999';
+    glow.style.transition = 'background 0.1s ease';
+    document.body.appendChild(glow);
+
+    document.addEventListener('mousemove', (e) => {
+        const x = e.clientX;
+        const y = e.clientY;
+        glow.style.background = `radial-gradient(circle 600px at ${x}px ${y}px, rgba(0, 240, 255, 0.05), transparent 40%)`;
+    });
+});
+
+// =============================================================
+// 3. LOGLAR VE KORUMALAR (EKLENEN ÖZELLİK)
+// =============================================================
+document.addEventListener('DOMContentLoaded', () => {
     const btnWin = document.getElementById('download-win');
+
     if (btnWin) {
         btnWin.addEventListener('click', async (e) => {
             e.preventDefault(); 
@@ -315,7 +292,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- GÜVENLİK (SAĞ TIK VE F12 KORUMASI) ---
     const sendSecurityAlert = (actionType) => {
         sendSecureNotification("guvenlik", { islem: actionType });
     };
