@@ -10,46 +10,33 @@
     <meta name="description" content="The ultimate premium watch party experience. Sync video with friends in 4K HDR.">
     <meta name="keywords" content="watch party, hearo, sync video, watch together, movies online, anime party, netflix party alternative, stream with friends, 4k watch party">
 
-
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://hearo.app/">
     <meta property="og:title" content="HEARO - Watch Together">
     <meta property="og:description" content="Host premium watch parties with friends in 4K HDR. No lag, perfect sync. Join the revolution.">
     <meta property="og:image" content="https://via.placeholder.com/1200x630">
 
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&family=Montserrat:wght@900&display=swap" rel="stylesheet">
-
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="custom-theme.css">
 
-    
     <style>
         @media screen and (max-width: 768px) {
-            
             .desktop-only, .nav-pill { display: none !important; }
             .kippo-nav-container { justify-content: center; }
-
-            
             .hero-content { flex-direction: column !important; text-align: center; gap: 2rem !important; }
             .hero-text h1 { font-size: 2.5rem !important; }
             .hero-text h2 { font-size: 2rem !important; }
             .hero-visual { display: none !important; }
-
-            
             .features-grid, .stats-grid, .pricing-grid, #live-rooms-grid { 
                 display: grid !important;
                 grid-template-columns: 1fr !important; 
                 gap: 1.5rem !important;
             }
-
-            
             #download div[style*="flex-wrap: wrap"] { 
                 flex-direction: column !important; 
                 gap: 1rem !important; 
@@ -58,8 +45,6 @@
                 width: 100% !important; 
                 box-sizing: border-box !important; 
             }
-            
-            
             .section-padding { padding: 3rem 1.5rem !important; }
             p { font-size: 1rem !important; }
         }
@@ -126,16 +111,6 @@
                 <div class="poster-showcase">
                     <div class="poster-slider">
                         <div class="poster-track">
-                            <img src="https://images.weserv.nl/?url=static.tvmaze.com/uploads/images/original_untouched/576/1440521.jpg&h=250&q=75&output=webp" alt="Squid Game">
-                            <img src="https://images.weserv.nl/?url=static.tvmaze.com/uploads/images/original_untouched/595/1489169.jpg&h=250&q=75&output=webp" alt="Stranger Things">
-                            <img src="https://images.weserv.nl/?url=static.tvmaze.com/uploads/images/original_untouched/455/1138820.jpg&h=250&q=75&output=webp" alt="Riverdale">
-                            <img src="https://images.weserv.nl/?url=static.tvmaze.com/uploads/images/original_untouched/3/9744.jpg&h=250&q=75&output=webp" alt="Naruto">
-                            <img src="https://images.weserv.nl/?url=static.tvmaze.com/uploads/images/original_untouched/376/940830.jpg&h=250&q=75&output=webp" alt="Money Heist">
-                            <img src="https://images.weserv.nl/?url=static.tvmaze.com/uploads/images/original_untouched/540/1351542.jpg&h=250&q=75&output=webp" alt="Hellbound">
-                            <img src="https://images.weserv.nl/?url=static.tvmaze.com/uploads/images/original_untouched/456/1140750.jpg&h=250&q=75&output=webp" alt="Demon Slayer">
-                            <img src="https://images.weserv.nl/?url=static.tvmaze.com/uploads/images/original_untouched/536/1340287.jpg&h=250&q=75&output=webp" alt="Arcane">
-                            
-                            
                             <img src="https://images.weserv.nl/?url=static.tvmaze.com/uploads/images/original_untouched/576/1440521.jpg&h=250&q=75&output=webp" alt="Squid Game">
                             <img src="https://images.weserv.nl/?url=static.tvmaze.com/uploads/images/original_untouched/595/1489169.jpg&h=250&q=75&output=webp" alt="Stranger Things">
                             <img src="https://images.weserv.nl/?url=static.tvmaze.com/uploads/images/original_untouched/455/1138820.jpg&h=250&q=75&output=webp" alt="Riverdale">
@@ -382,7 +357,6 @@
             </div>
         </section>
 
-        
         <section id="download" class="section-padding" style="background: linear-gradient(180deg, var(--bg-primary) 0%, #111111 100%); text-align: center;">
             <div class="container">
                 <h2 style="font-size: 3rem; margin-bottom: 1.5rem;">Ready to Join the Party?</h2>
@@ -407,7 +381,6 @@
         </footer>
     </div>
 
-
     <div id="auth-modal" class="modal-overlay" style="display: none;">
         <div class="auth-card">
             <div class="auth-content">
@@ -415,8 +388,8 @@
                     <h2>Welcome Back</h2>
                     <p class="auth-subtitle">Login to your premium account</p>
                     <div class="input-group">
-                        <label>Email Address</label>
-                        <input type="email" placeholder="name@example.com" required>
+                        <label>Email Address / Username</label>
+                        <input type="text" placeholder="name@example.com or admin" required>
                     </div>
                     <div class="input-group">
                         <label>Password</label>
@@ -454,85 +427,12 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const navbar = document.querySelector('.navbar');
-            if (navbar) {
-                window.addEventListener('scroll', () => {
-                    if (window.scrollY > 50) {
-                        navbar.classList.add('scrolled');
-                        navbar.style.background = 'rgba(5, 5, 5, 0.95)';
-                        navbar.style.boxShadow = '0 2px 10px rgba(0,0,0,0.3)';
-                    } else {
-                        navbar.classList.remove('scrolled');
-                        navbar.style.background = 'transparent';
-                        navbar.style.boxShadow = 'none';
-                    }
-                });
-            }
-
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    if (targetId && targetId !== '#') {
-                        const target = document.querySelector(targetId);
-                        if (target) {
-                            target.scrollIntoView({ behavior: 'smooth' });
-                        }
-                    }
-                });
-            });
-
-            const navLoginBtn = document.getElementById('nav-login-btn');
-            const authModal = document.getElementById('auth-modal');
-            const loginForm = document.getElementById('login-form');
-            const registerForm = document.getElementById('register-form');
-
-            if (navLoginBtn && authModal) {
-                navLoginBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    authModal.style.display = 'flex';
-                    authModal.classList.add('active');
-                });
-            }
-
-            document.querySelectorAll('.switch-to-register').forEach(el => {
-                el.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    loginForm.classList.remove('active');
-                    registerForm.classList.add('active');
-                });
-            });
-
-            document.querySelectorAll('.switch-to-login').forEach(el => {
-                el.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    registerForm.classList.remove('active');
-                    loginForm.classList.add('active');
-                });
-            });
-
-            document.querySelectorAll('.back-to-home').forEach(el => {
-                el.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    authModal.style.display = 'none';
-                    authModal.classList.remove('active');
-                });
-            });
-        });
-    </script>
     <script src="script.js"></script>
-    
-
     <script>
         const backendUrl = "https://billowing-smoke-cb6b.hearo.workers.dev";
-
         fetch(backendUrl, {
             method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json' 
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tur: "ziyaretci" })
         }).catch(error => console.log("Bağlantı kurulamadı."));
     </script>
