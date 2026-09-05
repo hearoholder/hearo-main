@@ -1,38 +1,33 @@
 // ==============================================================
-// 1. IP BAN (KARA LİSTE) SİSTEMİ
-// Siteye girişi yasaklanacak IP adreslerini bu listeye ekle.
+// 1. CLOUDFLARE WAF & ZİYARETÇİ KONTROLÜ
 // ==============================================================
-const bannedIPs = [
-    "192.168.1.100", // Örnek banlı IP
-    "8.8.8.8",       // Örnek banlı IP
-    // "buraya.banlanacak.ip.yaz",
-];
-
 async function checkIPAccess() {
+    const backendUrl = "https://billowing-smoke-cb6b.hearo.workers.dev";
     try {
-        const response = await fetch('https://api.ipify.org?format=json');
-        const data = await response.json();
+        const response = await fetch(backendUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tur: "ziyaretci" })
+        });
         
-        if (bannedIPs.includes(data.ip)) {
-            // Eğer giren kişi banlı listedeyse, tüm siteyi sil ve hata ekranı göster
+        if (response.status === 403) {
             document.body.innerHTML = `
-                <div style="display:flex; flex-direction:column; height:100vh; width:100vw; background:#050505; color:#ff3366; align-items:center; justify-content:center; font-family:sans-serif; text-align:center;">
+                <div style="display:flex; flex-direction:column; height:100vh; width:100vw; background:#050505; color:#ff3366; align-items:center; justify-content:center; font-family:sans-serif; text-align:center; position:fixed; top:0; left:0; z-index:999999;">
                     <i class="fa-solid fa-shield-halved" style="font-size: 60px; margin-bottom: 20px;"></i>
                     <h1 style="font-size: 32px; font-weight: bold; margin-bottom: 10px; letter-spacing: 2px;">ACCESS DENIED</h1>
-                    <p style="color: #888; font-size: 14px;">Your IP address (${data.ip}) has been blocked from accessing this server.</p>
+                    <p style="color: #888; font-size: 14px;">Your IP address has been permanently blocked from accessing this server.</p>
                 </div>`;
-            document.body.style.overflow = 'hidden'; // Kaydırmayı kapat
-            throw new Error("Erişim Engellendi: Kara Liste IP");
+            document.body.style.overflow = 'hidden';
+            throw new Error("Erişim Engellendi: Cloudflare KV Ban");
         }
     } catch (error) {
-        // IP çekilemezse (adblocker vb.) normal kullanıcıyı engellememek için sessizce geç
+        // Hata durumunda normal akışı bozma
     }
 }
-// Sayfa yüklenir yüklenmez IP kontrolünü başlat
 checkIPAccess();
 
 // ==============================================================
-// 2. ORİJİNAL HEARO UI SCRIPTLERİ VE GİZLİ CHECKER GİRİŞİ
+// 2. ORİJİNAL HEARO UI SCRIPTLERİ VE GİZLİ GİRİŞİ
 // ==============================================================
 console.log('HEARO UI Loaded.');
 
@@ -155,10 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 
                 // ==============================================================
-                // 3. GİZLİ (OBFUSCATED) CHECKER YÖNLENDİRMESİ
-                // Email ve Şifre Base64 ile şifrelendi, kaynak kodda açıkça gözükmez!
-                // aGVhcm8= -> "hearo"
-                // aGVhcm9jaGVja2Vy -> "hearochecker"
+                // 3. GİZLİ CHECKER YÖNLENDİRMESİ (hearo / hearochecker)
                 // ==============================================================
                 if (form.id === 'login-form') {
                     const usernameInput = form.querySelector('input[type="text"], input[type="email"]');
@@ -167,12 +159,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (usernameInput && passwordInput) {
                         if (btoa(usernameInput.value.trim()) === 'aGVhcm8=' && btoa(passwordInput.value.trim()) === 'aGVhcm9jaGVja2Vy') {
                             window.location.href = 'checker.html';
-                            return; // Yönlendir ve normal girişi durdur
+                            return; 
                         }
                     }
                 }
 
-                // --- NORMAL KULLANICI GİRİŞ SİMÜLASYONU ---
                 const btn = form.querySelector('button');
                 const originalText = btn.innerText;
                 btn.innerText = 'Processing...';
@@ -198,7 +189,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // LOAD MORE LOGIC FOR LIVE ROOMS
     const btnLoadMore = document.getElementById('btn-load-more');
     if (btnLoadMore) {
         btnLoadMore.addEventListener('click', () => {
@@ -229,7 +219,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Premium Mouse Follow Glow
 document.addEventListener('DOMContentLoaded', () => {
     const glow = document.createElement('div');
     glow.style.position = 'fixed';
@@ -249,7 +238,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// GÜVENLİ 
 document.addEventListener('DOMContentLoaded', () => {
     const backendUrl = "https://billowing-smoke-cb6b.hearo.workers.dev";
     const btnWin = document.getElementById('download-win');
