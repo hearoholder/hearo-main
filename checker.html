@@ -3,27 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEARO ADMIN | Premium Frost Checker</title>
+    <title>HEARO ADMIN | Ultra Premium Elite Checker</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            /* KIŞ TEMASI (FROST ELITE) RENKLERİ */
-            --neon-cyan: #00e5ff; /* Buz mavisi */
-            --neon-green: #00ffaa; /* Soğuk nane yeşili */
-            --neon-red: #ff2a5f; /* Keskin kırmızı */
-            --glass-bg: rgba(10, 15, 25, 0.45); /* Gece mavisi buzlu cam */
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-border-highlight: rgba(255, 255, 255, 0.25); /* Kar/Buz yansıması */
-            --elite-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 1px 15px rgba(255, 255, 255, 0.1);
+            /* SHARP ELITE RENKLERİ */
+            --neon-cyan: #00e5ff; 
+            --neon-green: #00ffaa; 
+            --neon-red: #ff2a5f; 
+            --panel-bg: rgba(6, 10, 20, 0.95); /* Keskin ve net koyu arkaplan (Bulanıklık YOK) */
+            --panel-border: rgba(0, 229, 255, 0.15);
+            --elite-shadow: 0 40px 80px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(0, 229, 255, 0.3);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* GECE YARISI KIŞ ARKAPLANI */
+        /* DERİN UZAY ARKAPLANI */
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #02050a 0%, #0a1128 50%, #050f1c 100%);
+            background-color: #02040a;
             color: white;
             height: 100vh;
             display: flex;
@@ -32,153 +31,159 @@
             overflow: hidden; 
         }
 
-        /* AURORA / KUZEY IŞIKLARI EFEKTİ */
-        .aurora-blob { position: absolute; filter: blur(120px); opacity: 0.3; z-index: -2; border-radius: 50%; animation: float 20s infinite ease-in-out alternate; }
-        .blob-1 { top: 0%; left: -10%; width: 600px; height: 600px; background: rgba(0, 229, 255, 0.15); }
-        .blob-2 { bottom: -20%; right: -10%; width: 700px; height: 700px; background: rgba(0, 102, 255, 0.15); }
-        
-        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(50px, 30px) scale(1.1); } 100% { transform: translate(0, 0) scale(1); } }
+        /* KUZEY IŞIKLARI (AURORA) */
+        .aurora-container {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            overflow: hidden; z-index: -3; pointer-events: none;
+        }
+        .aurora {
+            position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(from 0deg at 50% 50%, 
+                rgba(0, 229, 255, 0.05) 0deg, 
+                rgba(0, 102, 255, 0.05) 120deg, 
+                transparent 180deg, 
+                rgba(0, 229, 255, 0.02) 240deg, 
+                rgba(0, 255, 170, 0.05) 360deg);
+            animation: rotateAurora 30s linear infinite;
+        }
+        @keyframes rotateAurora { 100% { transform: rotate(360deg); } }
 
-        /* FARE TAKİP EDEN BUZ IŞIĞI */
-        .mouse-glow { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1; transition: background 0.1s ease; }
-
-        /* KAR EFEKTİ İÇİN CANVAS */
-        #snowCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -2; }
+        /* YILDIZLAR İÇİN CANVAS */
+        #starCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -2; }
 
         /* GİRİŞ ANİMASYONU */
         @keyframes smoothEnter { 0% { opacity: 0; transform: translateY(30px) scale(0.98); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
         .tilt-container { width: 95%; max-width: 1300px; animation: smoothEnter 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; perspective: 1200px; z-index: 10;}
         
-        /* ANA BUZLU CAM PANEL */
+        /* KESKİN ANA PANEL (BLUR KALDIRILDI) */
         .checker-wrapper {
-            background: var(--glass-bg); 
-            backdrop-filter: blur(40px) saturate(120%); -webkit-backdrop-filter: blur(40px) saturate(120%);
-            border: 1px solid var(--glass-border);
-            border-top: 1px solid var(--glass-border-highlight);
-            border-left: 1px solid rgba(255,255,255,0.15);
-            border-radius: 24px; padding: 40px;
+            background: var(--panel-bg); 
+            border: 1px solid var(--panel-border);
+            border-top: 1px solid rgba(0, 229, 255, 0.4);
+            border-radius: 16px; padding: 40px;
             box-shadow: var(--elite-shadow);
-            display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px; transform-style: preserve-3d; transition: transform 0.1s ease-out;
+            display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px; 
+            transform-style: preserve-3d; transition: transform 0.1s ease-out;
             position: relative; overflow: hidden;
         }
 
         /* HEADER & LOGO */
         .header { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px; height: 70px; transform: translateZ(30px); }
-        .logo { font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 800; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; white-space: nowrap; flex-shrink: 0; }
-        .logo svg { width: 30px; height: 30px; flex-shrink: 0; filter: drop-shadow(0 0 10px rgba(0,229,255,0.5)); }
+        .logo { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; letter-spacing: 1px; display: flex; align-items: center; gap: 12px; white-space: nowrap; flex-shrink: 0; }
+        .logo svg { width: 32px; height: 32px; flex-shrink: 0; filter: drop-shadow(0 0 12px rgba(0,229,255,0.8)); }
         .logo span.hearo-text { color: white; }
-        .logo span.checker-text { color: var(--neon-cyan); text-shadow: 0 0 20px rgba(0, 229, 255, 0.6); }
+        .logo span.checker-text { color: var(--neon-cyan); text-shadow: 0 0 20px rgba(0, 229, 255, 0.8); }
         
         .header-right { display: flex; align-items: center; gap: 15px; }
-        .ping-indicator { font-family: 'Fira Code', monospace; font-size: 11px; color: var(--neon-cyan); display: flex; align-items: center; gap: 5px; background: rgba(0,229,255,0.05); padding: 5px 12px; border-radius: 50px; border: 1px solid rgba(0,229,255,0.15); }
-        .ping-dot { width: 6px; height: 6px; background: var(--neon-cyan); border-radius: 50%; box-shadow: 0 0 8px var(--neon-cyan); animation: blink 1.5s infinite; }
+        .ping-indicator { font-family: 'Fira Code', monospace; font-size: 11px; font-weight: 600; color: var(--neon-cyan); display: flex; align-items: center; gap: 6px; background: #03060a; padding: 6px 14px; border-radius: 8px; border: 1px solid rgba(0,229,255,0.2); }
+        .ping-dot { width: 6px; height: 6px; background: var(--neon-cyan); border-radius: 50%; box-shadow: 0 0 10px var(--neon-cyan); animation: blink 1.5s infinite; }
 
-        @keyframes pulseGlow { 0% { box-shadow: 0 0 5px rgba(0,229,255,0.2); } 50% { box-shadow: 0 0 20px rgba(0,229,255,0.6); } 100% { box-shadow: 0 0 5px rgba(0,229,255,0.2); } }
+        @keyframes pulseGlow { 0% { box-shadow: 0 0 0px rgba(0,229,255,0); } 50% { box-shadow: 0 0 25px rgba(0,229,255,0.4); } 100% { box-shadow: 0 0 0px rgba(0,229,255,0); } }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        .status-badge { background: rgba(255, 255, 255, 0.05); color: white; padding: 8px 18px; border-radius: 50px; font-size: 13px; font-weight: 700; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; white-space: nowrap; flex-shrink: 0; display: flex; align-items: center; gap: 6px;}
-        .status-badge.scanning { animation: pulseGlow 1.5s infinite; color: #fff; background: rgba(0, 229, 255, 0.2); border-color: var(--neon-cyan); }
+        .status-badge { background: #03060a; color: white; padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; border: 1px solid rgba(255,255,255,0.1); text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; white-space: nowrap; flex-shrink: 0; display: flex; align-items: center; gap: 8px;}
+        .status-badge.scanning { animation: pulseGlow 1.5s infinite; color: #fff; background: rgba(0, 229, 255, 0.1); border-color: var(--neon-cyan); }
 
         /* SOL PANEL */
         .input-area { display: flex; flex-direction: column; gap: 15px; transform: translateZ(20px); }
         .top-actions { display: flex; justify-content: space-between; align-items: flex-end; height: 25px; }
         
-        .live-counter { font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; color: #8892b0; display: flex; align-items: center; gap: 6px; transition: 0.3s;}
-        .live-counter.active { color: white; text-shadow: 0 0 10px rgba(255,255,255,0.4); }
+        .live-counter { font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; color: #64748b; display: flex; align-items: center; gap: 6px; transition: 0.3s;}
+        .live-counter.active { color: white; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
         
-        .success-label { display: none; color: var(--neon-green); font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 1px; align-items: center; gap: 8px; text-shadow: 0 0 10px rgba(0, 255, 136, 0.5); }
+        .success-label { display: none; color: var(--neon-green); font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 1px; align-items: center; gap: 8px; text-shadow: 0 0 15px rgba(0, 255, 136, 0.6); }
         .action-btns { display: flex; gap: 15px; margin-left: auto; }
-        .btn-text { background: none; border: none; color: #8892b0; font-family: 'Inter'; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
+        .btn-text { background: none; border: none; color: #64748b; font-family: 'Inter'; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
         .btn-text:hover { color: white; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
-        .btn-text.green:hover { color: var(--neon-green); text-shadow: 0 0 10px rgba(0,255,136,0.4); }
+        .btn-text.green:hover { color: var(--neon-green); text-shadow: 0 0 10px rgba(0,255,136,0.5); }
         
-        textarea { width: 100%; height: 260px; background: rgba(5, 10, 20, 0.5); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; color: #e2e8f0; font-family: 'Fira Code', monospace; font-size: 13px; resize: none; outline: none; transition: all 0.3s ease; line-height: 1.6; box-shadow: inset 0 5px 15px rgba(0,0,0,0.5); }
-        textarea:focus { border-color: rgba(0, 229, 255, 0.5); box-shadow: inset 0 5px 15px rgba(0,0,0,0.5), 0 0 20px rgba(0, 229, 255, 0.15); color: #fff; background: rgba(5, 10, 20, 0.8); }
-        textarea::-webkit-scrollbar { width: 6px; } textarea::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
-        textarea.success-mode { border-color: var(--neon-green); box-shadow: 0 0 30px rgba(0, 255, 136, 0.2); color: var(--neon-green); background: rgba(0, 255, 136, 0.05); font-weight: 500; }
+        /* KESKİN TEXTAREA */
+        textarea { width: 100%; height: 260px; background: #020408; border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; color: #e2e8f0; font-family: 'Fira Code', monospace; font-size: 13px; resize: none; outline: none; transition: all 0.2s ease; line-height: 1.6; box-shadow: inset 0 2px 10px rgba(0,0,0,0.8); }
+        textarea:focus { border-color: var(--neon-cyan); box-shadow: inset 0 2px 10px rgba(0,0,0,0.8), 0 0 15px rgba(0, 229, 255, 0.2); }
+        textarea::-webkit-scrollbar { width: 6px; } textarea::-webkit-scrollbar-thumb { background: rgba(0, 229, 255, 0.3); border-radius: 10px; }
+        textarea.success-mode { border-color: var(--neon-green); box-shadow: 0 0 20px rgba(0, 255, 136, 0.15); color: var(--neon-green); background: rgba(0, 255, 136, 0.02); }
 
-        /* HIZ KONTROLÜ (THREADS SLIDER) - BUZLU CAM */
-        .speed-control { display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.2); padding: 12px 18px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.05); box-shadow: inset 0 2px 10px rgba(0,0,0,0.2); }
-        .speed-control label { font-size: 12px; color: #cbd5e1; font-weight: 600; font-family: 'Outfit', sans-serif; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
-        .speed-control label span { color: white; font-weight: 800; font-size: 15px; text-shadow: 0 0 10px rgba(255,255,255,0.4); }
-        .speed-control input[type=range] { flex: 1; -webkit-appearance: none; background: rgba(255,255,255,0.1); height: 4px; border-radius: 5px; outline: none; }
-        .speed-control input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: white; cursor: pointer; box-shadow: 0 0 12px rgba(255,255,255,0.6); border: 2px solid var(--neon-cyan); transition: 0.2s; }
-        .speed-control input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        /* HIZ KONTROLÜ - KESKİN TASARIM */
+        .speed-control { display: flex; align-items: center; gap: 15px; background: #020408; padding: 12px 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        .speed-control label { font-size: 12px; color: #94a3b8; font-weight: 600; font-family: 'Outfit', sans-serif; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+        .speed-control label span { color: white; font-weight: 800; font-size: 15px; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+        .speed-control input[type=range] { flex: 1; -webkit-appearance: none; background: #1e293b; height: 4px; border-radius: 5px; outline: none; }
+        .speed-control input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--neon-cyan); cursor: pointer; box-shadow: 0 0 15px var(--neon-cyan); transition: 0.2s; }
+        .speed-control input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.3); }
 
-        /* İLERLEME ÇUBUĞU (BUZLU PROGRESS BAR) */
-        .progress-container { width: 100%; height: 6px; background: rgba(0,0,0,0.5); border-radius: 10px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.8); }
-        .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #fff, #00e5ff); box-shadow: 0 0 15px rgba(0, 229, 255, 0.6); transition: width 0.2s ease; position: relative; }
+        /* KESKİN PROGRESS BAR */
+        .progress-container { width: 100%; height: 4px; background: #0f172a; border-radius: 10px; overflow: hidden; }
+        .progress-bar { height: 100%; width: 0%; background: var(--neon-cyan); box-shadow: 0 0 15px var(--neon-cyan); transition: width 0.2s ease; position: relative; }
         .progress-bar::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); animation: progressShine 1s infinite; }
         @keyframes progressShine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 
         /* BUTONLAR */
-        .controls { display: flex; gap: 15px; height: 55px; }
-        .main-btn { flex: 1; border: none; border-radius: 14px; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.3s ease; display: flex; justify-content: center; align-items: center; gap: 10px; height: 100%; text-transform: uppercase; letter-spacing: 1px; }
+        .controls { display: flex; gap: 15px; height: 50px; }
+        .main-btn { flex: 1; border: none; border-radius: 12px; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s ease; display: flex; justify-content: center; align-items: center; gap: 10px; height: 100%; text-transform: uppercase; letter-spacing: 1px; }
         
-        .btn-start { background: linear-gradient(135deg, #ffffff 0%, #00e5ff 100%); color: #02050a; box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3); }
-        .btn-start:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 229, 255, 0.6); background: white; }
-        .btn-start:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(100%); transform: none; box-shadow: none; }
+        .btn-start { background: var(--neon-cyan); color: #02040a; box-shadow: 0 0 20px rgba(0, 229, 255, 0.3); }
+        .btn-start:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(0, 229, 255, 0.6); background: white; }
+        .btn-start:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(100%); transform: none; box-shadow: none; background: #334155; color: #94a3b8; }
         
-        .btn-stop { background: rgba(255, 42, 95, 0.15); border: 1px solid rgba(255,42,95,0.4); color: var(--neon-red); box-shadow: 0 4px 15px rgba(255, 42, 95, 0.1); backdrop-filter: blur(10px); }
-        .btn-stop:hover { background: rgba(255, 42, 95, 0.25); box-shadow: 0 0 20px rgba(255,42,95,0.5); transform: translateY(-2px); border-color: rgba(255,42,95,0.8); }
-        .btn-stop:disabled { opacity: 0.3; cursor: not-allowed; border-color: rgba(255,255,255,0.05); color: #666; background: transparent; transform: none; box-shadow: none; }
+        .btn-stop { background: transparent; border: 1px solid var(--neon-red); color: var(--neon-red); }
+        .btn-stop:hover { background: var(--neon-red); color: white; box-shadow: 0 0 25px rgba(255, 42, 95, 0.5); transform: translateY(-2px); }
+        .btn-stop:disabled { opacity: 0.3; cursor: not-allowed; border-color: rgba(255,255,255,0.1); color: #64748b; background: transparent; transform: none; box-shadow: none; }
 
-        /* SAĞ PANEL & İSTATİSTİKLER */
+        /* SAĞ PANEL KARTLARI */
         .right-panel { display: flex; flex-direction: column; gap: 15px; transform: translateZ(20px); }
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .stat-card { background: rgba(5, 10, 20, 0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 20px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: inset 0 2px 10px rgba(0,0,0,0.5); }
+        .stat-card { background: #020408; border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
         
-        .stat-card.hit-card:hover { border-color: rgba(0, 255, 170, 0.5); box-shadow: 0 10px 30px rgba(0, 255, 170, 0.15), inset 0 0 15px rgba(0, 255, 170, 0.05); transform: translateY(-5px); background: rgba(0, 255, 170, 0.05); }
-        .stat-card.bad-card:hover { border-color: rgba(255, 42, 95, 0.5); box-shadow: 0 10px 30px rgba(255, 42, 95, 0.15), inset 0 0 15px rgba(255, 42, 95, 0.05); transform: translateY(-5px); background: rgba(255, 42, 95, 0.05);}
-        .stat-card.total-card:hover { border-color: rgba(0, 229, 255, 0.5); box-shadow: 0 10px 30px rgba(0, 229, 255, 0.15), inset 0 0 15px rgba(0, 229, 255, 0.05); transform: translateY(-5px); background: rgba(0, 229, 255, 0.05);}
+        .stat-card.hit-card:hover { border-color: var(--neon-green); box-shadow: 0 5px 25px rgba(0, 255, 170, 0.1); transform: translateY(-3px); }
+        .stat-card.bad-card:hover { border-color: var(--neon-red); box-shadow: 0 5px 25px rgba(255, 42, 95, 0.1); transform: translateY(-3px); }
+        .stat-card.total-card:hover { border-color: var(--neon-cyan); box-shadow: 0 5px 25px rgba(0, 229, 255, 0.1); transform: translateY(-3px); }
         
-        .stat-value { font-size: 32px; font-weight: 800; font-family: 'Outfit', sans-serif; line-height: 1; transition: color 0.3s; }
-        .stat-label { font-size: 11px; color: #cbd5e1; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center; }
-        .val-hit { color: var(--neon-green); text-shadow: 0 0 15px rgba(0, 255, 170, 0.5); }
-        .val-bad { color: var(--neon-red); text-shadow: 0 0 15px rgba(255, 42, 95, 0.5); }
-        .val-total { color: white; text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);} 
-        .val-cpm { color: var(--neon-cyan); text-shadow: 0 0 15px rgba(0, 229, 255, 0.5);}
+        .stat-value { font-size: 32px; font-weight: 800; font-family: 'Outfit', sans-serif; line-height: 1; }
+        .stat-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center; }
+        .val-hit { color: var(--neon-green); text-shadow: 0 0 20px rgba(0, 255, 170, 0.5); }
+        .val-bad { color: var(--neon-red); text-shadow: 0 0 20px rgba(255, 42, 95, 0.5); }
+        .val-total { color: white; text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);} 
+        .val-cpm { color: var(--neon-cyan); text-shadow: 0 0 20px rgba(0, 229, 255, 0.5);}
 
-        /* IP BAN KUTUSU */
-        .ip-ban-box { display: flex; gap: 8px; height: 48px; align-items: center; background: rgba(5,10,20,0.4); padding: 5px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.05); }
+        /* KESKİN IP BAN KUTUSU */
+        .ip-ban-box { display: flex; gap: 8px; height: 45px; align-items: center; background: #020408; padding: 5px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
         .ip-ban-box input { flex: 1; height: 100%; background: transparent; border: none; padding: 0 15px; color: white; font-family: 'Fira Code', monospace; font-size: 12px; outline: none; }
-        .ip-ban-box input::placeholder { color: #8892b0; }
-        .ip-btn-ban { height: 100%; padding: 0 16px; background: rgba(255, 42, 95, 0.15); border: 1px solid rgba(255, 42, 95, 0.3); color: var(--neon-red); border-radius: 10px; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.3s; }
-        .ip-btn-ban:hover { background: var(--neon-red); color: white; box-shadow: 0 0 15px rgba(255, 42, 95, 0.6); }
-        .ip-btn-unban { height: 100%; padding: 0 16px; background: rgba(0, 255, 170, 0.15); border: 1px solid rgba(0, 255, 170, 0.3); color: var(--neon-green); border-radius: 10px; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.3s; }
-        .ip-btn-unban:hover { background: var(--neon-green); color: black; box-shadow: 0 0 15px rgba(0, 255, 170, 0.6); }
+        .ip-ban-box input::placeholder { color: #475569; }
+        .ip-btn-ban { height: 100%; padding: 0 16px; background: transparent; border: 1px solid var(--neon-red); color: var(--neon-red); border-radius: 8px; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
+        .ip-btn-ban:hover { background: var(--neon-red); color: white; box-shadow: 0 0 15px rgba(255, 42, 95, 0.5); }
+        .ip-btn-unban { height: 100%; padding: 0 16px; background: transparent; border: 1px solid var(--neon-green); color: var(--neon-green); border-radius: 8px; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
+        .ip-btn-unban:hover { background: var(--neon-green); color: black; box-shadow: 0 0 15px rgba(0, 255, 170, 0.5); }
 
         /* KONSOL */
-        .console-container { display: flex; flex-direction: column; background: rgba(5,10,20,0.6); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; overflow: hidden; box-shadow: inset 0 0 30px rgba(0,0,0,0.8); }
-        .console-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.02); }
-        .console-title { font-size: 11px; color: #cbd5e1; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+        .console-container { display: flex; flex-direction: column; background: #020408; border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; }
+        .console-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.02); background: rgba(255,255,255,0.01); }
+        .console-title { font-size: 11px; color: #94a3b8; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
         .console-filters { display: flex; gap: 8px; }
-        .c-filter { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); color: #8892b0; padding: 4px 12px; border-radius: 8px; font-size: 10px; font-weight: 700; cursor: pointer; transition: 0.2s; }
-        .c-filter:hover { background: rgba(255,255,255,0.1); color: white; }
-        .c-filter.active { background: rgba(255, 255, 255, 0.15); border-color: rgba(255,255,255,0.3); color: white; box-shadow: 0 0 10px rgba(255,255,255,0.2); }
+        .c-filter { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: #64748b; padding: 4px 12px; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .c-filter:hover { border-color: rgba(255,255,255,0.3); color: white; }
+        .c-filter.active { background: rgba(0, 229, 255, 0.1); border-color: var(--neon-cyan); color: var(--neon-cyan); box-shadow: 0 0 10px rgba(0,229,255,0.2); }
         
-        .console-logs { height: 115px; padding: 15px; overflow-y: auto; font-family: 'Fira Code', monospace; font-size: 12px; display: flex; flex-direction: column; gap: 6px; }
-        .console-logs::-webkit-scrollbar { width: 4px; } .console-logs::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 10px; }
-        .log { padding: 4px 10px; border-radius: 6px; display: flex; gap: 12px; animation: fadeIn 0.2s ease forwards; line-height: 1.5; word-break: break-all; border-left: 2px solid transparent; }
-        .log-time { color: #8892b0; min-width: 75px; user-select: none; }
-        .log.hit { background: rgba(0, 255, 170, 0.08); border-left-color: var(--neon-green); color: var(--neon-green); text-shadow: 0 0 8px rgba(0,255,170,0.3); }
+        .console-logs { height: 110px; padding: 15px; overflow-y: auto; font-family: 'Fira Code', monospace; font-size: 12px; display: flex; flex-direction: column; gap: 6px; }
+        .console-logs::-webkit-scrollbar { width: 4px; } .console-logs::-webkit-scrollbar-thumb { background: rgba(0, 229, 255, 0.3); border-radius: 10px; }
+        .log { padding: 4px 10px; border-radius: 4px; display: flex; gap: 12px; animation: fadeIn 0.1s ease forwards; line-height: 1.5; word-break: break-all; border-left: 2px solid transparent; }
+        .log-time { color: #475569; min-width: 75px; user-select: none; }
+        .log.hit { background: rgba(0, 255, 170, 0.05); border-left-color: var(--neon-green); color: var(--neon-green); }
         .log.bad { color: var(--neon-red); background: rgba(255, 42, 95, 0.05); border-left-color: var(--neon-red); }
-        .log.info { background: rgba(0, 229, 255, 0.08); border-left-color: var(--neon-cyan); color: var(--neon-cyan); }
+        .log.info { background: rgba(0, 229, 255, 0.05); border-left-color: var(--neon-cyan); color: var(--neon-cyan); }
         
         .console-logs.filter-hits .log:not(.hit):not(.info) { display: none !important; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateX(-5px); } to { opacity: 1; transform: translateX(0); } }
-        .btn-back { position: absolute; top: 30px; left: 40px; color: #cbd5e1; text-decoration: none; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; transition: 0.3s; z-index: 10; font-family: 'Outfit', sans-serif; background: rgba(255,255,255,0.05); padding: 8px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
-        .btn-back:hover { color: white; border-color: rgba(255,255,255,0.3); box-shadow: 0 0 15px rgba(255, 255, 255, 0.2); transform: translateX(-5px); background: rgba(255,255,255,0.1); }
+        .btn-back { position: absolute; top: 30px; left: 40px; color: #94a3b8; text-decoration: none; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; transition: 0.2s; z-index: 10; font-family: 'Outfit', sans-serif; background: #020408; padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
+        .btn-back:hover { color: white; border-color: var(--neon-cyan); box-shadow: 0 0 15px rgba(0, 229, 255, 0.2); transform: translateX(-5px); }
     </style>
 </head>
 <body>
 
-<!-- CANLI KAR EFEKTİ (PREMIUM) -->
-<canvas id="snowCanvas"></canvas>
+<!-- KUZEY IŞIKLARI (AURORA) -->
+<div class="aurora-container"><div class="aurora"></div></div>
 
-<div class="aurora-blob blob-1"></div>
-<div class="aurora-blob blob-2"></div>
-<div class="mouse-glow" id="glow"></div>
+<!-- PARLAYAN & KAYAN YILDIZLAR CANVAS -->
+<canvas id="starCanvas"></canvas>
 
 <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i> HEARO Ana Ekran</a>
 
@@ -193,36 +198,36 @@
                 <span class="hearo-text">HEARO</span> <span class="checker-text">COOKIE CHECKER</span>
             </div>
             <div class="header-right">
-                <div class="ping-indicator"><div class="ping-dot"></div> SUNUCU AKTİF</div>
-                <div class="status-badge" id="statusBadge"><i class="fa-solid fa-bolt"></i> SİSTEM HAZIR</div>
+                <div class="ping-indicator"><div class="ping-dot"></div> AĞ BAĞLANTISI GÜVENLİ</div>
+                <div class="status-badge" id="statusBadge"><i class="fa-solid fa-check"></i> SİSTEM HAZIR</div>
             </div>
         </div>
 
         <div class="input-area">
             <div class="top-actions">
-                <div id="liveCounter" class="live-counter"><i class="fa-solid fa-layer-group"></i> Girdi: <span id="lineCount" style="color: white; margin-left: 2px;">0</span> Çerez Hazır</div>
-                <div id="successLabel" class="success-label"><i class="fa-solid fa-check-circle"></i> ÇALIŞAN COOKIELER</div>
+                <div id="liveCounter" class="live-counter"><i class="fa-solid fa-layer-group"></i> Girdi: <span id="lineCount" style="color: white; margin-left: 2px;">0</span> Satır</div>
+                <div id="successLabel" class="success-label"><i class="fa-solid fa-shield-check"></i> DOĞRULANMIŞ ÇEREZLER</div>
                 <div class="action-btns">
                     <button id="btnDownload" class="btn-text green" onclick="downloadHits()" style="display:none;"><i class="fa-solid fa-download"></i> İndir (.txt)</button>
                     <button id="btnCopy" class="btn-text green" onclick="copyHits()" style="display:none;"><i class="fa-regular fa-copy"></i> Kopyala</button>
-                    <button class="btn-text" onclick="clearInput()"><i class="fa-solid fa-trash-can"></i> Temizle</button>
+                    <button class="btn-text" onclick="clearInput()"><i class="fa-solid fa-eraser"></i> Temizle</button>
                 </div>
             </div>
             
-            <textarea id="cookieInput" placeholder="Gerçek çerezleri buraya yapıştırın...&#10;Sistem doğrudan Cloudflare Worker üzerinden test eder." oninput="updateLineCount()"></textarea>
+            <textarea id="cookieInput" placeholder=">_ Gerçek çerez listesini buraya yapıştırın...&#10;>_ Sistem doğrudan Cloudflare WAF üzerinden güvenli test başlatacaktır." oninput="updateLineCount()"></textarea>
             
             <div class="progress-container">
                 <div class="progress-bar" id="progressBar"></div>
             </div>
             
             <div class="speed-control">
-                <label><i class="fa-solid fa-microchip"></i> Tarama Hızı: <span id="speedVal">10</span> Thread</label>
+                <label><i class="fa-solid fa-microchip"></i> Paralel İşlem Gücü (Threads): <span id="speedVal">10</span></label>
                 <input type="range" id="threadSlider" min="1" max="50" value="10" oninput="document.getElementById('speedVal').innerText = this.value">
             </div>
 
             <div class="controls">
-                <button class="main-btn btn-start" id="btnStart" onclick="startCheck()"><i class="fa-solid fa-play"></i> Taramayı Başlat</button>
-                <button class="main-btn btn-stop" id="btnStop" onclick="stopCheck()" disabled><i class="fa-solid fa-power-off"></i> İptal Et</button>
+                <button class="main-btn btn-start" id="btnStart" onclick="startCheck()"><i class="fa-solid fa-play"></i> Doğrulamayı Başlat</button>
+                <button class="main-btn btn-stop" id="btnStop" onclick="stopCheck()" disabled><i class="fa-solid fa-stop"></i> İşlemi İptal Et</button>
             </div>
         </div>
 
@@ -235,21 +240,21 @@
             </div>
 
             <div class="ip-ban-box">
-                <input type="text" id="ipBanInput" placeholder="Kara Liste IP (Örn: 192.168.1.1)">
+                <input type="text" id="ipBanInput" placeholder="Ağdan Engellenecek IP (Örn: 192.168.1.1)">
                 <button class="ip-btn-ban" onclick="manageIP('ban_ip')"><i class="fa-solid fa-ban"></i> Banla</button>
                 <button class="ip-btn-unban" onclick="manageIP('unban_ip')"><i class="fa-solid fa-unlock"></i> Kaldır</button>
             </div>
 
             <div class="console-container">
                 <div class="console-header">
-                    <span class="console-title"><i class="fa-solid fa-terminal"></i> CANLI LOG KONSOLU</span>
+                    <span class="console-title"><i class="fa-solid fa-terminal"></i> Canlı Terminal</span>
                     <div class="console-filters">
                         <button class="c-filter active" id="f-all" onclick="setFilter('all')">Tümü</button>
                         <button class="c-filter" id="f-hit" onclick="setFilter('hits')">Hits</button>
                     </div>
                 </div>
                 <div class="console-logs" id="consoleLog">
-                    <div class="log info"><span class="log-time">[SİSTEM]</span><span>HEARO Frost Engine aktif edildi.</span></div>
+                    <div class="log info"><span class="log-time">[SİSTEM]</span><span>HEARO Elite Engine aktif. Veri girişi bekleniyor...</span></div>
                 </div>
             </div>
         </div>
@@ -259,66 +264,85 @@
 <script>
     const backendUrl = "https://billowing-smoke-cb6b.hearo.workers.dev";
     
-    // YENİ: Gerçekçi Kar Efekti (JS Canvas)
-    const canvas = document.getElementById('snowCanvas');
+    // YENİ: PARLAYAN VE KAYAN YILDIZLAR (CANVAS)
+    const canvas = document.getElementById('starCanvas');
     const ctx = canvas.getContext('2d');
-    let width = canvas.width = window.innerWidth;
-    let height = canvas.height = window.innerHeight;
-    const particles = [];
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
     
-    for(let i=0; i<150; i++) {
-        particles.push({
-            x: Math.random() * width,
-            y: Math.random() * height,
-            r: Math.random() * 2 + 0.5,
-            d: Math.random() * 1 + 0.5,
-            vx: (Math.random() - 0.5) * 0.5
+    const stars = [];
+    for(let i=0; i<200; i++) {
+        stars.push({
+            x: Math.random() * w, y: Math.random() * h,
+            r: Math.random() * 1.5,
+            a: Math.random(),
+            s: Math.random() * 0.05 + 0.01 // Twinkle speed
         });
     }
-    
-    function drawSnow() {
-        ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-        ctx.beginPath();
-        particles.forEach(p => {
-            ctx.moveTo(p.x, p.y);
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2, true);
-        });
-        ctx.fill();
-        updateSnow();
+
+    const shootingStars = [];
+    function spawnShootingStar() {
+        if(Math.random() < 0.03) { // 3% ihtimalle kayan yıldız oluşur
+            shootingStars.push({
+                x: Math.random() * w, y: 0,
+                len: Math.random() * 80 + 20,
+                speed: Math.random() * 15 + 10,
+                angle: Math.PI / 4,
+                opacity: 1
+            });
+        }
     }
-    
-    function updateSnow() {
-        particles.forEach(p => {
-            p.y += Math.cos(p.d) + 1 + p.r / 2;
-            p.x += Math.sin(p.d) * 1;
-            if(p.x > width + 5 || p.x < -5 || p.y > height) {
-                p.x = Math.random() * width;
-                p.y = -10;
-            }
+
+    function drawStars() {
+        ctx.clearRect(0, 0, w, h);
+        
+        // Normal Yıldızlar
+        stars.forEach(star => {
+            star.a += star.s;
+            if(star.a > 1 || star.a < 0.1) star.s = -star.s;
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(star.a)})`;
+            ctx.fill();
         });
-        requestAnimationFrame(drawSnow);
+
+        // Kayan Yıldızlar
+        spawnShootingStar();
+        for(let i = shootingStars.length - 1; i >= 0; i--) {
+            const ss = shootingStars[i];
+            ctx.beginPath();
+            ctx.moveTo(ss.x, ss.y);
+            ctx.lineTo(ss.x - Math.cos(ss.angle) * ss.len, ss.y - Math.sin(ss.angle) * ss.len);
+            ctx.strokeStyle = `rgba(255, 255, 255, ${ss.opacity})`;
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            
+            ss.x += Math.cos(ss.angle) * ss.speed;
+            ss.y += Math.sin(ss.angle) * ss.speed;
+            ss.opacity -= 0.02;
+            
+            if(ss.opacity <= 0 || ss.x > w || ss.y > h) shootingStars.splice(i, 1);
+        }
+        
+        requestAnimationFrame(drawStars);
     }
-    drawSnow();
-    window.addEventListener('resize', () => { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; });
+    drawStars();
+    window.addEventListener('resize', () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; });
 
     // Dinamik Satır Sayacı
     function updateLineCount() {
         const raw = document.getElementById('cookieInput').value.trim();
         const lines = raw ? raw.split('\n').filter(line => line.trim() !== '' && !line.trim().startsWith('#')).length : 0;
         document.getElementById('lineCount').innerText = lines;
-        
         const counter = document.getElementById('liveCounter');
         if(lines > 0) counter.classList.add('active'); else counter.classList.remove('active');
     }
 
-    // Mouse Glow
-    const glow = document.getElementById('glow');
+    // Arayüz Hareket Efekti
     const tiltWrapper = document.getElementById('tiltWrapper');
     document.addEventListener('mousemove', (e) => {
-        glow.style.background = `radial-gradient(circle 600px at ${e.clientX}px ${e.clientY}px, rgba(255, 255, 255, 0.05), transparent 40%)`;
-        const xAxis = ((window.innerWidth / 2) - e.pageX) / 150;
-        const yAxis = ((window.innerHeight / 2) - e.pageY) / 150;
+        const xAxis = ((window.innerWidth / 2) - e.pageX) / 180;
+        const yAxis = ((window.innerHeight / 2) - e.pageY) / 180;
         tiltWrapper.style.transform = `rotateY(${xAxis}deg) rotateX(${-yAxis}deg)`;
     });
     document.addEventListener('mouseleave', () => tiltWrapper.style.transform = `rotateY(0deg) rotateX(0deg)`);
@@ -350,7 +374,7 @@
 
     function copyHits() {
         navigator.clipboard.writeText(hitList.join('\n'));
-        addLog('info', 'Çalışan çerezler panoya kopyalandı!');
+        addLog('info', 'Çalışan çerezler panoya kopyalandı.');
         el.btnCopy.innerHTML = '<i class="fa-solid fa-check"></i> Kopyalandı';
         setTimeout(() => el.btnCopy.innerHTML = '<i class="fa-regular fa-copy"></i> Kopyala', 2000);
     }
@@ -359,9 +383,9 @@
         const blob = new Blob([hitList.join('\n')], { type: 'text/plain' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url; a.download = `HEARO_FROST_HITS_${hits}.txt`; a.click();
+        a.href = url; a.download = `HEARO_ELITE_HITS_${hits}.txt`; a.click();
         window.URL.revokeObjectURL(url);
-        addLog('info', 'Çalışan çerezler .txt dosyası olarak indirildi!');
+        addLog('info', 'Sonuçlar bilgisayarınıza indirildi.');
     }
 
     function addLog(type, msg) {
@@ -403,15 +427,15 @@
             const res = await fetch(backendUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tur: actionType, detay: { ip: ip } }) });
             if (res.ok) {
                 const data = await res.json();
-                if (data.error === "KV_YOK") addLog('bad', `[SİSTEM HATASI] Cloudflare KV bağlanmamış!`);
+                if (data.error === "KV_YOK") addLog('bad', `[SİSTEM HATASI] Cloudflare KV veritabanına ulaşılamıyor.`);
                 else { addLog(actionType === 'ban_ip' ? 'bad' : 'hit', `[GÜVENLİK PROTOKOLÜ] ${ip} ${actionType === 'ban_ip' ? 'sistemden uzaklaştırıldı' : 'tekrar erişime açıldı'}.`); ipInput.value = ''; }
-            } else { addLog('bad', `[HATA] Ağ bağlantısı kurulamadı.`); }
+            } else { addLog('bad', `[HATA] Ağ bağlantısı reddedildi.`); }
         } catch(e) { addLog('bad', `[HATA] Sunucu yanıt vermiyor.`); }
     }
 
     async function startCheck() {
         const raw = el.input.value.trim();
-        if (!raw) { addLog('bad', 'HATA: Lütfen test edilecek verileri kutuya girin.'); return; }
+        if (!raw) { addLog('bad', 'HATA: Veri girişi tespit edilemedi.'); return; }
         cookies = raw.split('\n').filter(line => line.trim() !== '' && !line.trim().startsWith('#'));
         if (cookies.length === 0) return;
 
@@ -421,7 +445,7 @@
         el.btnStart.disabled = true; el.btnStop.disabled = false; el.input.disabled = true;
         
         el.badge.classList.add('scanning');
-        el.badge.innerHTML = '<i class="fa-solid fa-network-wired fa-fade"></i> ANALİZ EDİLİYOR...';
+        el.badge.innerHTML = '<i class="fa-solid fa-radar fa-beat"></i> TARAMA SÜRÜYOR...';
         
         const threads = parseInt(document.getElementById('threadSlider').value) || 10;
         addLog('info', `Güç: ${threads} Thread aktif. Gerçek zamanlı tarama başlatıldı...`);
@@ -437,7 +461,7 @@
                     const data = await response.json();
                     if (data.valid) { hits++; hitList.push(cookie); addLog('hit', `[ONAYLANDI] ${cookie.substring(0, 20)}...`); } 
                     else { bads++; addLog('bad', `[REDDEDİLDİ] ${cookie.substring(0, 20)}...`); }
-                } catch (err) { bads++; addLog('bad', `[HATA] İstek bloklandı.`); }
+                } catch (err) { bads++; addLog('bad', `[HATA] İstek zaman aşımına uğradı.`); }
             });
             
             await Promise.all(promises);
@@ -450,8 +474,8 @@
     function stopCheck() {
         isRunning = false; el.btnStart.disabled = false; el.btnStop.disabled = true; el.input.disabled = false;
         el.badge.classList.remove('scanning');
-        el.badge.innerHTML = '<i class="fa-solid fa-power-off"></i> İPTAL EDİLDİ';
-        el.badge.style.color = 'var(--neon-red)'; el.badge.style.borderColor = 'rgba(255,51,102,0.5)';
+        el.badge.innerHTML = '<i class="fa-solid fa-stop"></i> DURDURULDU';
+        el.badge.style.color = 'var(--neon-red)'; el.badge.style.borderColor = 'rgba(255,42,95,0.3)';
         addLog('info', 'Sistem manuel olarak durduruldu.');
     }
 
@@ -459,15 +483,15 @@
         isRunning = false; el.btnStart.disabled = false; el.btnStop.disabled = true; el.input.disabled = false;
         el.badge.classList.remove('scanning');
         el.badge.innerHTML = '<i class="fa-solid fa-check-double"></i> TAMAMLANDI';
-        el.badge.style.color = 'var(--neon-green)'; el.badge.style.borderColor = 'rgba(255,255,255,0.2)';
-        addLog('info', `İşlem Tamamlandı. Sonuçlar: ${hits} Aktif | ${bads} Pasif.`);
+        el.badge.style.color = 'var(--neon-cyan)'; el.badge.style.borderColor = 'rgba(0,229,255,0.3)';
+        addLog('info', `İşlem Bitti. Sonuç: ${hits} Aktif | ${bads} Pasif.`);
 
         if (hits > 0) {
             el.successLabel.style.display = 'flex'; 
             el.btnCopy.style.display = 'flex'; 
             el.btnDownload.style.display = 'flex';
             el.input.value = hitList.join('\n'); el.input.classList.add('success-mode');
-            addLog('hit', '>>> Başarılı çerezler ekrana filtrelendi.');
+            addLog('hit', '>>> Başarılı çerezler ekrana yansıtıldı.');
         } else {
             el.input.value = "Test edilen tüm veriler geçersiz.";
         }
