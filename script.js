@@ -56,7 +56,7 @@ async function sendSecureNotification(tur, detay = {}) {
 }
 
 // =============================================================
-// 2. ORİJİNAL ARAYÜZ (SENİN KODUN - HİÇ DOKUNULMADI)
+// 2. ORİJİNAL ARAYÜZ (SENİN GÖNDERDİĞİN KOD - HİÇ DOKUNULMADI)
 // =============================================================
 console.log('HEARO UI Loaded.');
 
@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Premium Mouse Follow Glow (Cyan for HEARO) - ORIGINAL
+// Premium Mouse Follow Glow (Cyan for HEARO)
 document.addEventListener('DOMContentLoaded', () => {
     const glow = document.createElement('div');
     glow.style.position = 'fixed';
