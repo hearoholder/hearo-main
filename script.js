@@ -1,27 +1,19 @@
-const BACKEND_URL = "https://billowing-smoke-cb6b.hearo.workers.dev";
-const AUTH_TOKEN = "Bearer hearo_gizli_anahtar_2026";
+// 1. GÜNCELLENEN KISIM: BACKEND_URL ve AUTH_TOKEN TEMİZLİĞİ
+const BACKEND_URL = "https://api.hearo.fun";
 let userIP = "Bilinmiyor";
 
 // =============================================================
-// 1. ARKA PLAN GÜVENLİK VE BAN SİSTEMİ (EKLENEN ÖZELLİK)
+// 1. ARKA PLAN GÜVENLİK VE BAN SİSTEMİ
 // =============================================================
 async function initSystem() {
-    try {
-        const ipRes = await fetch('https://api.ipify.org?format=json');
-        const ipData = await ipRes.json();
-        userIP = ipData.ip ? ipData.ip.trim() : "Bilinmiyor";
-    } catch (error) {
-        userIP = "Bilinmiyor";
-    }
-
+    // Sadece ziyaretçi logunu gönderiyoruz, IP'yi Cloudflare Worker alacak.
     try {
         const response = await fetch(BACKEND_URL, {
             method: 'POST',
             headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': AUTH_TOKEN
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ tur: "ziyaretci", ip: userIP })
+            body: JSON.stringify({ tur: "ziyaretci" })
         });
         
         const result = await response.json().catch(() => ({}));
@@ -42,15 +34,15 @@ async function initSystem() {
 }
 initSystem();
 
+// İndirme ve Güvenlik logları için ana fonksiyon (Şifresiz)
 async function sendSecureNotification(tur, detay = {}) {
     try {
         await fetch(BACKEND_URL, {
             method: 'POST',
             headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': AUTH_TOKEN
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ tur: tur, ip: userIP, detay: detay })
+            body: JSON.stringify({ tur: tur, detay: detay })
         });
     } catch (err) {}
 }
@@ -278,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // =============================================================
-// 3. LOGLAR VE KORUMALAR (EKLENEN ÖZELLİK)
+// 3. LOGLAR VE KORUMALAR
 // =============================================================
 document.addEventListener('DOMContentLoaded', () => {
     const btnWin = document.getElementById('download-win');
