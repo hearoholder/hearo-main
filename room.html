@@ -7,6 +7,15 @@
     <title>Join Room - HEARO</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M21.9999 15L17.9999 21.9282L9.99989 21.9282L13.9999 15L21.9999 15Z' fill='%2300f0ff'/><path d='M14.0001 9.00003L18.0001 2.07183L10.0001 2.07186L6.00015 9.00007L14.0001 9.00003Z' fill='%2300f0ff'/></svg>">
     <meta name="description" content="Join a HEARO watch party room and watch together with friends in perfect sync.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://hearo.fun/room.html">
+    <meta property="og:title" content="Join Room - HEARO">
+    <meta property="og:description" content="Join a HEARO watch party room and watch together with friends in perfect sync.">
+    <meta name="theme-color" content="#00f0ff">
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:url" content="https://hearo.fun/room.html">
+    <meta property="twitter:title" content="Join Room - HEARO">
+    <meta property="twitter:description" content="Join a HEARO watch party room and watch together with friends in perfect sync.">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1126,8 +1135,6 @@
                                 <div class="chat-time">just now</div>
                             </div>
                         </div>
-                        </div>
-                        <div class="chat-system">🔵 You joined the room</div>
                     </div>
                     <div class="chat-input-area">
                         <div class="emoji-row">
@@ -1289,7 +1296,7 @@
                 if (isSystem) {
                     const div = document.createElement('div');
                     div.className = 'chat-system';
-                    div.textContent = text;
+                    div.textContent = text || username;
                     chatMessages.appendChild(div);
                 } else {
                     const now = new Date();
@@ -1420,7 +1427,5 @@
 
         });
     </script>
-
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v3d52b47920f24c319d37e2661827c42b1787588026925" integrity="sha512-d9sL6GJLXn6fInD1+TVXhTcQOsmxeHfmHAvwGDIxp5TO+uo1fiWW7mHomMj4MLRlCsJDTqXzWLHJFFlPCEIj/A==" data-cf-beacon='{"version":"2024.11.0","token":"40bf189251634366918c257a4b66806c","r":1}' crossorigin="anonymous"></script>
 </body>
-<script>'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'},{'ap':'cpsh-oh'},{'server':'sxb1plzcpnl509616'},{'dcenter':'sxb1'},{'cp_id':'10842411'},{'cp_cl':'8'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script><script src='https://img1.wsimg.com/traffic-assets/js/tccl.min.js'></script></html>
+</html>
